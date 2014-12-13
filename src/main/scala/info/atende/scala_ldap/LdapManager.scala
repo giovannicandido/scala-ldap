@@ -12,7 +12,7 @@ import scala.util.{Failure, Success, Try}
  */
 class LdapManager(host: String) {
   private var port: Int = _
-  private var userDN: String = _
+  private var userDN: DN = _
   private var password: String = _
   private var useSSL = false
 
@@ -46,7 +46,7 @@ class LdapManager(host: String) {
    * @param port The port to connect default to LdapManager.DEFAULT_PORT
    * @param useSSL If true use SSL to connect. Default to false
    */
-  def this(userDN: String, password: String, host: String, port: Int = LdapManager.DEFAULT_PORT, useSSL: Boolean = false) = {
+  def this(userDN: DN, password: String, host: String, port: Int = LdapManager.DEFAULT_PORT, useSSL: Boolean = false) = {
     this(host)
     this.port = port
     this.userDN = userDN
@@ -91,7 +91,7 @@ class LdapManager(host: String) {
       else
         connection.connect(host, LdapManager.DEFAULT_PORT)
       if (userDN != null)
-        connection.bind(userDN, password)
+        connection.bind(userDN.toString, password)
       Success(connection)
     } catch {
       case e: Throwable =>

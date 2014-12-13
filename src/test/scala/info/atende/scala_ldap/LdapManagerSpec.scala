@@ -9,8 +9,8 @@ import org.specs2.mutable._
  *         12/8/14
  */
 class LdapManagerSpec extends Specification {
-  val dc = "dc=example,dc=local"
-  val userDN = "cn=Administrator,cn=Users," + dc
+  val dc = DC("example") / DC("local")
+  val userDN = CN("Administrator") / CN("Users") / dc
   val password = "password"
   val host = "localhost"
   val vhost = "192.168.54.136"
@@ -22,9 +22,9 @@ class LdapManagerSpec extends Specification {
   step({
     // Create the configuration to use for the server.
     val config: InMemoryDirectoryServerConfig =
-      new InMemoryDirectoryServerConfig(dc)
+      new InMemoryDirectoryServerConfig(dc.toString)
 
-    config.addAdditionalBindCredentials(userDN, password)
+    config.addAdditionalBindCredentials(userDN.toString, password)
 
     // Create the directory server instance, populate it with data from the
     // "test-data.ldif" file, and start listening for client connections.
