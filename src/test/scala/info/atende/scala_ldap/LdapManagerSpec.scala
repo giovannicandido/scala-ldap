@@ -9,9 +9,12 @@ import org.specs2.mutable._
  *         12/8/14
  */
 class LdapManagerSpec extends Specification {
-  val userDN = "cn=Administrator"
+  val dc = "dc=example,dc=local"
+  val userDN = "cn=Administrator,cn=Users," + dc
   val password = "password"
   val host = "localhost"
+  val vhost = "192.168.54.136"
+  val vpassword = "SuperPass%0254"
   var ds: InMemoryDirectoryServer = _
 
   "Ldap Manager Spec".title
@@ -19,7 +22,7 @@ class LdapManagerSpec extends Specification {
   step({
     // Create the configuration to use for the server.
     val config: InMemoryDirectoryServerConfig =
-      new InMemoryDirectoryServerConfig("dc=example,dc=com")
+      new InMemoryDirectoryServerConfig(dc)
 
     config.addAdditionalBindCredentials(userDN, password)
 
