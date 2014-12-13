@@ -1,8 +1,7 @@
 package info.atende.scala_ldap
 
-import javax.net.ssl.SSLSocketFactory
-
 import com.unboundid.ldap.sdk.LDAPConnection
+import com.unboundid.util.ssl.SSLUtil
 
 import scala.util.{Failure, Success, Try}
 
@@ -81,7 +80,8 @@ class LdapManager(host: String) {
   def connect: Try[LDAPConnection] = {
     val connection = new LDAPConnection()
     if (useSSL) {
-      connection.setSocketFactory(SSLSocketFactory.getDefault)
+      val sslUtil = new SSLUtil()
+      connection.setSocketFactory(sslUtil.createSSLSocketFactory())
     }
     try {
       if (port != 0)
