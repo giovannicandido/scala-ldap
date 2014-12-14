@@ -1,6 +1,6 @@
 package info.atende.scala_ldap
 
-import com.unboundid.ldap.sdk.LDAPConnection
+import com.unboundid.ldap.sdk._
 import com.unboundid.util.ssl.SSLUtil
 
 import scala.util.{Failure, Success, Try}
@@ -64,7 +64,7 @@ class LdapManager(host: String) {
   def withConnection(f: LDAPConnection => Unit): Unit = {
     connect match {
       case Success(connection) =>
-        f(connection)
+        val result = f(connection)
         connection.close()
       case Failure(ex) =>
         ex.printStackTrace()
@@ -97,6 +97,36 @@ class LdapManager(host: String) {
       case e: Throwable =>
         connection.close()
         Failure(e)
+    }
+  }
+  def add(entry: LdapEntry): Unit ={
+    connect.map(c => {
+      try {
+        val e = LdapEntry.mapToSDKEntry(entry)
+        c.add(e)
+      }finally {
+        c.close()
+      }
+    })
+  }
+  def lookup(rdn: RDN, base: DN): Option[LdapEntry] = {
+    connect match {
+      case Success(c) =>
+        try {
+          val result = c.search(base.toString, SearchScope.SUB, s"($rdn)")
+          if(result.getEntryCount > 0){
+            val entry = result.getSearchEntries.get(0)
+            Some(LdapEntry.mapFromSDKEntry(entry))
+          }else {
+            None
+          }
+        } finally {
+          c.close()
+        }
+
+      case Failure(ex) =>
+        ex.printStackTrace()
+        None
     }
   }
 

@@ -1,0 +1,638 @@
+dn: CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: container
+cn: Users
+description: Default container for upgraded user accounts
+distinguishedName: CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213150947.0Z
+whenChanged: 20141213150947.0Z
+uSNCreated: 5821
+uSNChanged: 5821
+showInAdvancedViewOnly: FALSE
+name: Users
+objectGUID:: R79eNBTMPUC+HLdFXs+Ljw==
+systemFlags: -1946157056
+objectCategory: CN=Container,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000001.0Z
+
+dn: CN=Administrator,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: user
+cn: Administrator
+description: Built-in account for administering the computer/domain
+distinguishedName: CN=Administrator,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213150948.0Z
+whenChanged: 20141213152559.0Z
+uSNCreated: 8196
+memberOf: CN=Group Policy Creator Owners,CN=Users,DC=example,DC=local
+memberOf: CN=Domain Admins,CN=Users,DC=example,DC=local
+memberOf: CN=Enterprise Admins,CN=Users,DC=example,DC=local
+memberOf: CN=Schema Admins,CN=Users,DC=example,DC=local
+memberOf: CN=Administrators,CN=Builtin,DC=example,DC=local
+uSNChanged: 12831
+name: Administrator
+objectGUID:: wPZBgkD/X0iN+9+zA7jHkw==
+userAccountControl: 512
+badPwdCount: 0
+codePage: 0
+countryCode: 0
+badPasswordTime: 0
+lastLogoff: 0
+lastLogon: 130629986199536156
+logonHours:: ////////////////////////////
+pwdLastSet: 130629533397386055
+primaryGroupID: 513
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfC9AEAAA==
+adminCount: 1
+accountExpires: 0
+logonCount: 14
+sAMAccountName: Administrator
+sAMAccountType: 805306368
+objectCategory: CN=Person,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213152559.0Z
+dSCorePropagationData: 20141213152559.0Z
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101181216.0Z
+lastLogonTimestamp: 130629572084216161
+
+dn: CN=Guest,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: user
+cn: Guest
+description: Built-in account for guest access to the computer/domain
+distinguishedName: CN=Guest,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213150948.0Z
+whenChanged: 20141213150948.0Z
+uSNCreated: 8197
+memberOf: CN=Guests,CN=Builtin,DC=example,DC=local
+uSNChanged: 8197
+name: Guest
+objectGUID:: F/iSildXe0CrgQZuOLUFbQ==
+userAccountControl: 66082
+badPwdCount: 0
+codePage: 0
+countryCode: 0
+badPasswordTime: 0
+lastLogoff: 0
+lastLogon: 0
+pwdLastSet: 0
+primaryGroupID: 514
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfC9QEAAA==
+accountExpires: 9223372036854775807
+logonCount: 0
+sAMAccountName: Guest
+sAMAccountType: 805306368
+objectCategory: CN=Person,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000001.0Z
+
+dn: CN=WinRMRemoteWMIUsers__,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: WinRMRemoteWMIUsers__
+description: 
+ Members of this group can access WMI resources over management protocols (such
+  as WS-Management via the Windows Remote Management service). This applies onl
+ y to WMI namespaces that grant access to the user.
+distinguishedName: CN=WinRMRemoteWMIUsers__,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213150948.0Z
+whenChanged: 20141213150948.0Z
+uSNCreated: 8198
+uSNChanged: 8198
+name: WinRMRemoteWMIUsers__
+objectGUID:: f3TpZoj670Sn8yJl9WBHng==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfC6AMAAA==
+sAMAccountName: WinRMRemoteWMIUsers__
+sAMAccountType: 536870912
+groupType: -2147483644
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000001.0Z
+
+dn: CN=krbtgt,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: user
+cn: krbtgt
+description: Key Distribution Center Service Account
+distinguishedName: CN=krbtgt,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213152559.0Z
+uSNCreated: 12324
+memberOf: 
+ CN=Denied RODC Password Replication Group,CN=Users,DC=example,DC=local
+uSNChanged: 12843
+showInAdvancedViewOnly: TRUE
+name: krbtgt
+objectGUID:: /A1cv5e9K0uknqcDw9rlyQ==
+userAccountControl: 514
+badPwdCount: 0
+codePage: 0
+countryCode: 0
+badPasswordTime: 0
+lastLogoff: 0
+lastLogon: 0
+pwdLastSet: 130629570494993954
+primaryGroupID: 513
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfC9gEAAA==
+adminCount: 1
+accountExpires: 9223372036854775807
+logonCount: 0
+sAMAccountName: krbtgt
+sAMAccountType: 805306368
+servicePrincipalName: kadmin/changepw
+objectCategory: CN=Person,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213152559.0Z
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000416.0Z
+msDS-SupportedEncryptionTypes: 0
+
+dn: CN=Domain Computers,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: Domain Computers
+description: All workstations and servers joined to the domain
+distinguishedName: CN=Domain Computers,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213151049.0Z
+uSNCreated: 12330
+uSNChanged: 12332
+name: Domain Computers
+objectGUID:: 1Ug7iR2BNUKnzN050LXf9g==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCAwIAAA==
+sAMAccountName: Domain Computers
+sAMAccountType: 268435456
+groupType: -2147483646
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000001.0Z
+
+dn: CN=Domain Controllers,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: Domain Controllers
+description: All domain controllers in the domain
+distinguishedName: CN=Domain Controllers,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213152559.0Z
+uSNCreated: 12333
+memberOf: 
+ CN=Denied RODC Password Replication Group,CN=Users,DC=example,DC=local
+uSNChanged: 12844
+name: Domain Controllers
+objectGUID:: dHAOxKK3wkGNlsGvwUde9w==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCBAIAAA==
+adminCount: 1
+sAMAccountName: Domain Controllers
+sAMAccountType: 268435456
+groupType: -2147483646
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213152559.0Z
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000416.0Z
+
+dn: CN=Schema Admins,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: Schema Admins
+description: Designated administrators of the schema
+member: CN=Administrator,CN=Users,DC=example,DC=local
+distinguishedName: CN=Schema Admins,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213152559.0Z
+uSNCreated: 12336
+memberOf: 
+ CN=Denied RODC Password Replication Group,CN=Users,DC=example,DC=local
+uSNChanged: 12828
+name: Schema Admins
+objectGUID:: X4s4LE0IYkmWorwq3GNX+A==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCBgIAAA==
+adminCount: 1
+sAMAccountName: Schema Admins
+sAMAccountType: 268435456
+groupType: -2147483640
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213152559.0Z
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000416.0Z
+
+dn: CN=Enterprise Admins,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: Enterprise Admins
+description: Designated administrators of the enterprise
+member: CN=Administrator,CN=Users,DC=example,DC=local
+distinguishedName: CN=Enterprise Admins,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213152559.0Z
+uSNCreated: 12339
+memberOf: 
+ CN=Denied RODC Password Replication Group,CN=Users,DC=example,DC=local
+memberOf: CN=Administrators,CN=Builtin,DC=example,DC=local
+uSNChanged: 12829
+name: Enterprise Admins
+objectGUID:: o0eU9yqg2EeCFo1jS+1pVw==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCBwIAAA==
+adminCount: 1
+sAMAccountName: Enterprise Admins
+sAMAccountType: 268435456
+groupType: -2147483640
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213152559.0Z
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000416.0Z
+
+dn: CN=Cert Publishers,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: Cert Publishers
+description: 
+ Members of this group are permitted to publish certificates to the directory
+member: CN=WIN-B35I882KC37,OU=Domain Controllers,DC=example,DC=local
+distinguishedName: CN=Cert Publishers,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213151531.0Z
+uSNCreated: 12342
+memberOf: 
+ CN=Denied RODC Password Replication Group,CN=Users,DC=example,DC=local
+uSNChanged: 12727
+name: Cert Publishers
+objectGUID:: VjuQSCxpqkWogBTKTp6IHA==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCBQIAAA==
+sAMAccountName: Cert Publishers
+sAMAccountType: 536870912
+groupType: -2147483644
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000001.0Z
+
+dn: CN=Domain Admins,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: Domain Admins
+description: Designated administrators of the domain
+member: CN=Administrator,CN=Users,DC=example,DC=local
+distinguishedName: CN=Domain Admins,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213152559.0Z
+uSNCreated: 12345
+memberOf: 
+ CN=Denied RODC Password Replication Group,CN=Users,DC=example,DC=local
+memberOf: CN=Administrators,CN=Builtin,DC=example,DC=local
+uSNChanged: 12827
+name: Domain Admins
+objectGUID:: NQxoPrrm+U6puqDsX8Y1Uw==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCAAIAAA==
+adminCount: 1
+sAMAccountName: Domain Admins
+sAMAccountType: 268435456
+groupType: -2147483646
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213152559.0Z
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000416.0Z
+
+dn: CN=Domain Users,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: Domain Users
+description: All domain users
+distinguishedName: CN=Domain Users,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213151049.0Z
+uSNCreated: 12348
+memberOf: CN=Users,CN=Builtin,DC=example,DC=local
+uSNChanged: 12350
+name: Domain Users
+objectGUID:: pfxARQN110KBQeAfOIbqxg==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCAQIAAA==
+sAMAccountName: Domain Users
+sAMAccountType: 268435456
+groupType: -2147483646
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000001.0Z
+
+dn: CN=Domain Guests,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: Domain Guests
+description: All domain guests
+distinguishedName: CN=Domain Guests,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213151049.0Z
+uSNCreated: 12351
+memberOf: CN=Guests,CN=Builtin,DC=example,DC=local
+uSNChanged: 12353
+name: Domain Guests
+objectGUID:: 25jN1ZDRGEyvUJ6WBz2xtQ==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCAgIAAA==
+sAMAccountName: Domain Guests
+sAMAccountType: 268435456
+groupType: -2147483646
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000001.0Z
+
+dn: CN=Group Policy Creator Owners,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: Group Policy Creator Owners
+description: Members in this group can modify group policy for the domain
+member: CN=Administrator,CN=Users,DC=example,DC=local
+distinguishedName: CN=Group Policy Creator Owners,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213151049.0Z
+uSNCreated: 12354
+memberOf: 
+ CN=Denied RODC Password Replication Group,CN=Users,DC=example,DC=local
+uSNChanged: 12391
+name: Group Policy Creator Owners
+objectGUID:: eWMp8cr4PECEnzzjgf6yKQ==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCCAIAAA==
+sAMAccountName: Group Policy Creator Owners
+sAMAccountType: 268435456
+groupType: -2147483646
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000001.0Z
+
+dn: CN=RAS and IAS Servers,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: RAS and IAS Servers
+description: 
+ Servers in this group can access remote access properties of users
+distinguishedName: CN=RAS and IAS Servers,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213151049.0Z
+uSNCreated: 12357
+uSNChanged: 12359
+name: RAS and IAS Servers
+objectGUID:: 8lGgoUdl2Ea17SVyDGA6Bw==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCKQIAAA==
+sAMAccountName: RAS and IAS Servers
+sAMAccountType: 536870912
+groupType: -2147483644
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000001.0Z
+
+dn: CN=Allowed RODC Password Replication Group,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: Allowed RODC Password Replication Group
+description: 
+ Members in this group can have their passwords replicated to all read-only dom
+ ain controllers in the domain
+distinguishedName: 
+ CN=Allowed RODC Password Replication Group,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213151049.0Z
+uSNCreated: 12402
+uSNChanged: 12404
+name: Allowed RODC Password Replication Group
+objectGUID:: yVvFbJXqK0C9FNvBuM25Fg==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCOwIAAA==
+sAMAccountName: Allowed RODC Password Replication Group
+sAMAccountType: 536870912
+groupType: -2147483644
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000001.0Z
+
+dn: CN=Denied RODC Password Replication Group,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: Denied RODC Password Replication Group
+description: 
+ Members in this group cannot have their passwords replicated to any read-only 
+ domain controllers in the domain
+member: CN=Read-only Domain Controllers,CN=Users,DC=example,DC=local
+member: CN=Group Policy Creator Owners,CN=Users,DC=example,DC=local
+member: CN=Domain Admins,CN=Users,DC=example,DC=local
+member: CN=Cert Publishers,CN=Users,DC=example,DC=local
+member: CN=Enterprise Admins,CN=Users,DC=example,DC=local
+member: CN=Schema Admins,CN=Users,DC=example,DC=local
+member: CN=Domain Controllers,CN=Users,DC=example,DC=local
+member: CN=krbtgt,CN=Users,DC=example,DC=local
+distinguishedName: 
+ CN=Denied RODC Password Replication Group,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213151049.0Z
+uSNCreated: 12405
+uSNChanged: 12433
+name: Denied RODC Password Replication Group
+objectGUID:: aQzNiZp/OUe92q+91ilq0A==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCPAIAAA==
+sAMAccountName: Denied RODC Password Replication Group
+sAMAccountType: 536870912
+groupType: -2147483644
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000001.0Z
+
+dn: CN=Read-only Domain Controllers,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: Read-only Domain Controllers
+description: 
+ Members of this group are Read-Only Domain Controllers in the domain
+distinguishedName: 
+ CN=Read-only Domain Controllers,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213152559.0Z
+uSNCreated: 12419
+memberOf: 
+ CN=Denied RODC Password Replication Group,CN=Users,DC=example,DC=local
+uSNChanged: 12845
+name: Read-only Domain Controllers
+objectGUID:: lzhXyTaMpEqW0Hn6dLF8NQ==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCCQIAAA==
+adminCount: 1
+sAMAccountName: Read-only Domain Controllers
+sAMAccountType: 268435456
+groupType: -2147483646
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213152559.0Z
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000416.0Z
+
+dn: CN=Enterprise Read-only Domain Controllers,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: Enterprise Read-only Domain Controllers
+description: 
+ Members of this group are Read-Only Domain Controllers in the enterprise
+distinguishedName: 
+ CN=Enterprise Read-only Domain Controllers,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213151049.0Z
+uSNCreated: 12429
+uSNChanged: 12431
+name: Enterprise Read-only Domain Controllers
+objectGUID:: ZKUeVrmkA0igB3A66KpcTA==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfC8gEAAA==
+sAMAccountName: Enterprise Read-only Domain Controllers
+sAMAccountType: 268435456
+groupType: -2147483640
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000001.0Z
+
+dn: CN=Cloneable Domain Controllers,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: Cloneable Domain Controllers
+description: Members of this group that are domain controllers may be cloned.
+distinguishedName: 
+ CN=Cloneable Domain Controllers,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213151049.0Z
+uSNCreated: 12440
+uSNChanged: 12442
+name: Cloneable Domain Controllers
+objectGUID:: b9pvGCqDq0KdU0febsWCzg==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCCgIAAA==
+sAMAccountName: Cloneable Domain Controllers
+sAMAccountType: 268435456
+groupType: -2147483646
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000001.0Z
+
+dn: CN=Protected Users,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: Protected Users
+description: 
+ Members of this group are afforded additional protections against authenticati
+ on security threats. See http://go.microsoft.com/fwlink/?LinkId=298939 for mor
+ e information.
+distinguishedName: CN=Protected Users,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151049.0Z
+whenChanged: 20141213151049.0Z
+uSNCreated: 12445
+uSNChanged: 12447
+name: Protected Users
+objectGUID:: 6zMY+NI2T0evxHhg0i8uOg==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCDQIAAA==
+sAMAccountName: Protected Users
+sAMAccountType: 268435456
+groupType: -2147483646
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+isCriticalSystemObject: TRUE
+dSCorePropagationData: 20141213151049.0Z
+dSCorePropagationData: 16010101000001.0Z
+
+dn: CN=DnsAdmins,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: DnsAdmins
+description: DNS Administrators Group
+distinguishedName: CN=DnsAdmins,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151129.0Z
+whenChanged: 20141213151129.0Z
+uSNCreated: 12466
+uSNChanged: 12468
+name: DnsAdmins
+objectGUID:: oYr5HOI00kGZ93NBPhGc9Q==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCTgQAAA==
+sAMAccountName: DnsAdmins
+sAMAccountType: 536870912
+groupType: -2147483644
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+dSCorePropagationData: 16010101000000.0Z
+
+dn: CN=DnsUpdateProxy,CN=Users,DC=example,DC=local
+changetype: add
+objectClass: top
+objectClass: group
+cn: DnsUpdateProxy
+description: 
+ DNS clients who are permitted to perform dynamic updates on behalf of some oth
+ er clients (such as DHCP servers).
+distinguishedName: CN=DnsUpdateProxy,CN=Users,DC=example,DC=local
+instanceType: 4
+whenCreated: 20141213151129.0Z
+whenChanged: 20141213151129.0Z
+uSNCreated: 12471
+uSNChanged: 12471
+name: DnsUpdateProxy
+objectGUID:: WHSYT1D9RUO8uPqMdQ7nGg==
+objectSid:: AQUAAAAAAAUVAAAAH135ywOXKXl51sfCTwQAAA==
+sAMAccountName: DnsUpdateProxy
+sAMAccountType: 268435456
+groupType: -2147483646
+objectCategory: CN=Group,CN=Schema,CN=Configuration,DC=example,DC=local
+dSCorePropagationData: 16010101000000.0Z
+

@@ -2,7 +2,10 @@ package info.atende.scala_ldap
 
 import com.unboundid.ldap.listener.{InMemoryDirectoryServer, InMemoryDirectoryServerConfig}
 import com.unboundid.ldap.sdk.LDAPConnection
+import com.unboundid.ldif.LDIFReader
 import org.specs2.mutable._
+
+import scala.io.Source
 
 /**
  * @author Giovanni Silva.
@@ -15,7 +18,12 @@ class LdapManagerSpec extends Specification {
   val host = "localhost"
   val vhost = "192.168.54.136"
   val vpassword = "SuperPass%0254"
+  val structureLdif = "/structure.ldif"
+  val adschema = "/adschema.ldif"
+  val adConfiguration = "/configuration.ldif"
   var ds: InMemoryDirectoryServer = _
+
+  def getManager: LdapManager = new LdapManager(userDN, password, host, ds.getListenPort)
 
   "Ldap Manager Spec".title
 
@@ -25,11 +33,16 @@ class LdapManagerSpec extends Specification {
       new InMemoryDirectoryServerConfig(dc.toString)
 
     config.addAdditionalBindCredentials(userDN.toString, password)
+    config.setSchema(null)
 
     // Create the directory server instance, populate it with data from the
     // "test-data.ldif" file, and start listening for client connections.
     ds = new InMemoryDirectoryServer(config)
-    //  ds.importFromLDIF(true, "test-data.ldif");
+
+    ds.importFromLDIF(false, new LDIFReader(Source.fromURL(getClass.getResource(adConfiguration)).bufferedReader()))
+    ds.importFromLDIF(false, new LDIFReader(Source.fromURL(getClass.getResource(adschema)).bufferedReader()))
+    ds.importFromLDIF(false, new LDIFReader(Source.fromURL(getClass.getResource(structureLdif)).bufferedReader()))
+
 
     ds.startListening()
   })
@@ -47,11 +60,24 @@ class LdapManagerSpec extends Specification {
     }
 
     "create a connection to be used" in {
-      val ldapManager = new LdapManager(userDN, password, host, ds.getListenPort)
+      val ldapManager = getManager
       val connection = ldapManager.connect
       connection.isSuccess shouldEqual true
       connection.get.isConnected shouldEqual true
     }
+
+    "Add and lookup a LdapEntry" in {
+      val manager = getManager
+      val entry = new LdapEntry(CN("user") / CN("Users") / dc, Some(List(new LdapAttribute("objectClass: top"))))
+      manager.add(entry)
+      val result = manager.lookup(CN("user"), CN("Users") / dc)
+
+      result.isDefined should beEqualTo(true)
+
+      result.get.dn must beEqualTo(entry.dn)
+
+    }
+
   }
 
   step({

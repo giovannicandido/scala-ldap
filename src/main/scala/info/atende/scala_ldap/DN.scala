@@ -35,3 +35,17 @@ case class DN(values: List[RDN]) {
 
   override def toString = values.map(_.toString).mkString(",")
 }
+
+object DN {
+  def parseString(dn:String): Option[DN] = {
+    val split = dn.split(",")
+    var mutableDN: DN = null
+    val rdns = split.map(RDN.parseString)
+    if(rdns.contains(None) || rdns.isEmpty){
+      None
+    }else{
+      val resultDN = rdns.flatten.foldLeft[DN](DN(List.empty)){(a,b) => a / b}
+      Some(resultDN)
+    }
+  }
+}

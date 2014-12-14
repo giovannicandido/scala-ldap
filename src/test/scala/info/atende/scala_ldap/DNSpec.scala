@@ -28,6 +28,11 @@ class DNSpec extends Specification {
       ou.isInstanceOf[DN] shouldEqual true
 
     }
+    "concat RDN / DN in DN" in {
+      val rdn = CN("users")
+      val dn = DC("example") / DC("local")
+      (rdn / dn).toString shouldEqual "cn=users,dc=example,dc=local"
+    }
     "parse the string value" in {
       val dn = CN("cn=Admin")
       val dnOu = CN("ou=Admin")

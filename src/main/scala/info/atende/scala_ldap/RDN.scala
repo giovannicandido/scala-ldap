@@ -9,6 +9,8 @@ import scala.annotation.tailrec
  *         12/10/14
  */
 trait RDN {
+  def apply(s: String): RDN
+
   val Type: String
   val value: String
   private val listSpecialCaracteres = List(',', '\\', '#', '+', '<', '>', ';', '"', '=')
@@ -32,12 +34,20 @@ trait RDN {
    * @return A Distinguish Name composed of the two
    */
   def /(dn: DN): DN = {
-    DN(dn.values :+ this)
+    DN(dn.values.::(this))
+  }
+  
+  def parseString(rdn: String): Option[RDN] = {
+    if(!rdn.toLowerCase.startsWith(Type) || rdn.split("=").size != 2) {
+      None
+    }else{
+      Some(this(rdn.split("=")(1)))
+    }
   }
 
-  override def toString = s"$Type=${parseString(value)}"
+  override def toString = s"$Type=${parseSpecialCaracteres(value)}"
 
-  protected def parseString(value: String): String = {
+  protected def parseSpecialCaracteres(value: String): String = {
 
     @tailrec
     def replace(value: String, position: Int): String = {
@@ -52,12 +62,40 @@ trait RDN {
   }
 }
 
+object RDN {
+  def parseString(rdn: String): Option[RDN] = {
+    val rdnLowerCase = rdn.toLowerCase
+    if(rdnLowerCase.startsWith("dc=")){
+      DC("").parseString(rdn)
+    }else if(rdnLowerCase.startsWith("cn=")){
+      CN("").parseString(rdn)
+    }else if(rdnLowerCase.startsWith("ou=")){
+      OU("").parseString(rdn)
+    }else if(rdnLowerCase.startsWith("o=")){
+      O("").parseString(rdn)
+    }else if(rdnLowerCase.startsWith("street=")){
+      STREET("").parseString(rdn)
+    }else if(rdnLowerCase.startsWith("l=")){
+      L("").parseString(rdn)
+    }else if(rdnLowerCase.startsWith("st=")){
+      ST("").parseString(rdn)
+    }else if(rdnLowerCase.startsWith("c=")){
+      C("").parseString(rdn)
+    }else if(rdnLowerCase.startsWith("uid=")){
+      UID("").parseString(rdn)
+    }else{
+      None
+    }
+  }
+}
+
 /**
  * Domain Component
  * @param value Value for the RDN
  */
 case class DC(value: String) extends RDN {
   override val Type: String = "dc"
+  override def apply(value: String) = new DC(value)
 }
 
 /**
@@ -66,6 +104,7 @@ case class DC(value: String) extends RDN {
  */
 case class CN(value: String) extends RDN {
   override val Type: String = "cn"
+  override def apply(value: String) = new CN(value)
 }
 
 /**
@@ -74,6 +113,7 @@ case class CN(value: String) extends RDN {
  */
 case class OU(value: String) extends RDN {
   override val Type: String = "ou"
+  override def apply(value: String) = new OU(value)
 }
 
 /**
@@ -82,6 +122,7 @@ case class OU(value: String) extends RDN {
  */
 case class O(value: String) extends RDN {
   override val Type: String = "o"
+  override def apply(value: String) = new O(value)
 }
 
 /**
@@ -90,6 +131,7 @@ case class O(value: String) extends RDN {
  */
 case class STREET(value: String) extends RDN {
   override val Type: String = "street"
+  override def apply(value: String) = new STREET(value)
 }
 
 /**
@@ -98,6 +140,7 @@ case class STREET(value: String) extends RDN {
  */
 case class L(value: String) extends RDN {
   override val Type: String = "l"
+  override def apply(value: String) = new L(value)
 }
 
 /**
@@ -106,6 +149,7 @@ case class L(value: String) extends RDN {
  */
 case class ST(value: String) extends RDN {
   override val Type: String = "st"
+  override def apply(value: String) = new ST(value)
 }
 
 /**
@@ -114,6 +158,7 @@ case class ST(value: String) extends RDN {
  */
 case class C(value: String) extends RDN {
   override val Type: String = "c"
+  override def apply(value: String) = new C(value)
 }
 
 /**
@@ -122,4 +167,5 @@ case class C(value: String) extends RDN {
  */
 case class UID(value: String) extends RDN {
   override val Type: String = "uid"
+  override def apply(value: String) = new UID(value)
 }
