@@ -58,16 +58,25 @@ class LdapManager(host: String) {
 
   /**
    * Execute an arbitrary function that depends on a connection. It forces the connection to close after the use
-   * This function creates and handle the connection for you
-   * @param f Function to execute
+   * This function creates and handle the connection for you. It close the connection if any
+   * exception was throw and return a Failure for recover.
+   * Its used internally by this class. This method expose the underlining API from the UnboundSDK to the caller
+   * its not recommend to use this method, use only if you need the flexibility provided by the underline API
+   * @param f Function to execute, it must return the  LdapResult in success
    */
-  def withConnection(f: LDAPConnection => Unit): Unit = {
+  def withConnection(f: LDAPConnection => LdapResult): Try[LdapResult] = {
     connect match {
       case Success(connection) =>
-        val result = f(connection)
-        connection.close()
+        try {
+          val result = f(connection)
+          Success(result)
+        }catch {
+          case e: Throwable => Failure(e)
+        } finally {
+          connection.close()
+        }
       case Failure(ex) =>
-        ex.printStackTrace()
+        Failure(ex)
 
     }
 
@@ -75,7 +84,7 @@ class LdapManager(host: String) {
 
   /**
    * Connect to the server. With or without the credentials
-   * @return True if the connection success false and a message otherwise
+   * @return The success LDAPConnection or Failure
    */
   def connect: Try[LDAPConnection] = {
     val connection = new LDAPConnection()
@@ -99,21 +108,39 @@ class LdapManager(host: String) {
         Failure(e)
     }
   }
-  def add(entry: LdapEntry): Unit ={
-    connect.map(c => {
-      try {
-        val e = LdapEntry.mapToSDKEntry(entry)
-        c.add(e)
-      }finally {
-        c.close()
-      }
+
+  /**
+   * Add the entry to ldap server mapping the attributes
+   * @param entry The entry to be added
+   * @return A success result of operation or a Failure with the exception
+   */
+  def add(entry: LdapEntry): Try[LdapResult] ={
+    withConnection(c => {
+      val result = c.add(LdapEntry.mapToSDKEntry(entry))
+      LdapResult(result.getResultCode.intValue(), result.getDiagnosticMessage)
     })
   }
+  /**
+   * Add the entry to ldap server mapping the attributes
+   * @param obj The object to be added
+   * @return A success result of operation or a Failure with the exception
+   */
+  def add[T](obj: T)(implicit mapper: EntryMapper[T]): Try[LdapResult] = {
+    val entry = mapper.mapToEntry(obj)
+    add(entry)
+  }
+
+  /**
+   * This method search and return the first element found if any
+   * @param rdn The RDN atribute of the element. Ex.: CN("1234")
+   * @param base The base to search the element, only elements that are direct childs of the base should be considered
+   * @return The LdapEntry if Any
+   */
   def lookup(rdn: RDN, base: DN): Option[LdapEntry] = {
     connect match {
       case Success(c) =>
         try {
-          val result = c.search(base.toString, SearchScope.SUB, s"($rdn)")
+          val result = c.search(base.toString, SearchScope.ONE, s"($rdn)")
           if(result.getEntryCount > 0){
             val entry = result.getSearchEntries.get(0)
             Some(LdapEntry.mapFromSDKEntry(entry))
@@ -123,11 +150,38 @@ class LdapManager(host: String) {
         } finally {
           c.close()
         }
-
       case Failure(ex) =>
-        ex.printStackTrace()
         None
     }
+  }
+  def lookup(dn: DN): Option[LdapEntry] = {
+    val base = DN(dn.values.tail)
+    val rdn = dn.values.head
+    lookup(rdn, base)
+  }
+
+  /**
+   * Try to delete the entry by its Distinguished Name
+   * @param dn The Distinguished Name representing the object to delete
+   * @return The LdapResult or any exceptions
+   */
+  def delete(dn: DN): Try[LdapResult] = {
+    withConnection( c => {
+      val result = c.delete(dn.toString)
+      LdapResult(result.getResultCode.intValue(), result.getDiagnosticMessage)
+    })
+  }
+
+  /**
+   * Try to delete the object by its Distinguished Name
+   * @param obj The object to be deleted
+   * @param mapper A mapper to convert the objet to LdapEntry
+   * @tparam T Type of object to delete
+   * @return The LdapResult or any exceptions
+   */
+  def delete[T](obj: T)(implicit mapper: EntryMapper[T]): Try[LdapResult] = {
+    val entry = mapper.mapToEntry(obj)
+    delete(entry.dn)
   }
 
 }

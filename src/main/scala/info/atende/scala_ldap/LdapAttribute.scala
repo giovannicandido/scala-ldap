@@ -70,6 +70,8 @@ class LdapAttribute(val name: String) {
     this.values = values.map(new ASN1OctetString(_)).toArray
   }
 
+
+
   /**
    * Retrieves the value for this attribute as a string.  If this attribute has
    * multiple values, then the first value will be returned.
@@ -243,4 +245,24 @@ class LdapAttribute(val name: String) {
     values.length
   }
 
+  def canEqual(other: Any): Boolean = other.isInstanceOf[LdapAttribute]
+
+  override def equals(other: Any): Boolean = {
+    if(other.isInstanceOf[LdapAttribute]) {
+      val o = other.asInstanceOf[LdapAttribute]
+      (o canEqual this) &&
+        getValues.toSeq.sorted == o.getValues.toSeq.sorted &&
+        name.equalsIgnoreCase(o.name)
+    }else{
+      false
+    }
+  }
+
+  override def hashCode(): Int = {
+    val state = Seq(getValues.toSeq.sorted, name.toLowerCase)
+    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
+  }
+}
+object LdapAttribute {
+  def apply(name: String, value: String) = new LdapAttribute(name, value)
 }

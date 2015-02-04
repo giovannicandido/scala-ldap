@@ -3,6 +3,7 @@ package info.atende.scala_ldap
 import com.unboundid.ldap.listener.{InMemoryDirectoryServer, InMemoryDirectoryServerConfig}
 import com.unboundid.ldap.sdk.LDAPConnection
 import com.unboundid.ldif.LDIFReader
+import info.atende.scala_ldap.schema.OrganizationalUnit
 import org.specs2.mutable._
 
 import scala.io.Source
@@ -54,6 +55,7 @@ class LdapManagerSpec extends Specification {
       ldapManager.withConnection(f => {
         f.isConnected shouldEqual true
         c = f
+        LdapResult(0, "Fake")
       })
       // After the function is executed the connection should be closed
       c.isConnected shouldEqual false
@@ -66,16 +68,32 @@ class LdapManagerSpec extends Specification {
       connection.get.isConnected shouldEqual true
     }
 
-    "Add and lookup a LdapEntry" in {
+    "add and lookup and delete a LdapEntry using DN" in {
       val manager = getManager
       val entry = new LdapEntry(CN("user") / CN("Users") / dc, Some(List(new LdapAttribute("objectClass: top"))))
-      manager.add(entry)
+      val success = manager.add(entry)
+      success.isSuccess must beEqualTo(true)
       val result = manager.lookup(CN("user"), CN("Users") / dc)
 
       result.isDefined should beEqualTo(true)
 
       result.get.dn must beEqualTo(entry.dn)
 
+      val deleteResult = manager.delete(entry.dn)
+      deleteResult.isSuccess must beEqualTo(true)
+
+      val result2 = manager.lookup(entry.dn)
+      result2.isDefined should beEqualTo(false)
+
+    }
+
+    "add and lookup and delete a object that has a EntryMapper Implementation" in {
+      val manager = getManager
+      val ou = new OrganizationalUnit("This is the displayName", OU("new") / CN("Users") / dc)
+      manager.add(ou).isSuccess mustEqual(true)
+      manager.lookup(ou.dn).isDefined mustEqual(true)
+      manager.delete(ou)
+      manager.lookup(ou.dn).isDefined mustEqual(false)
     }
 
   }
