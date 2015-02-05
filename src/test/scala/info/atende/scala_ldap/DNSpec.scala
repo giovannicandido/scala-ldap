@@ -17,6 +17,15 @@ class DNSpec extends Specification {
       dn.toString shouldEqual "cn=Administrator"
     }
 
+    "override equals and hashcode correctly" in {
+      val a = CN("info")
+      val b = CN("info")
+      a mustEqual b
+      a.## mustEqual b.##
+    }
+
+
+
     "concat RDN in DN" in {
       val cn = CN("Administrador") / OU("Test") / DC("example") / DC("com")
       cn.toString shouldEqual "cn=Administrador,ou=Test,dc=example,dc=com"
@@ -52,6 +61,12 @@ class DNSpec extends Specification {
       dn2.toString shouldEqual "cn=new,ou=first,ou=test"
     }
 
+    "override equals and hashcode correctly" in {
+      val a = OU("info") / OU("main")
+      val b = OU("info") / OU("main")
+      a mustEqual b
+      a.## mustEqual b.##
+    }
 
     "contact DN" in {
       val dn = CN("new") / OU("first")

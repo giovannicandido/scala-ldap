@@ -1,6 +1,6 @@
 package info.atende.scala_ldap.schema
 
-import info.atende.scala_ldap.{LdapAttribute, LdapEntry, EntryMapper, DN}
+import info.atende.scala_ldap._
 
 /**
  * This class represents a LDAP group of users
@@ -35,5 +35,7 @@ object Group {
         None
       }
     }
+
+    override def getModificationOperations(obj: Group): LdapModifications = new LdapModifications(Map.empty, Map.empty, Map.empty)
   }
 }

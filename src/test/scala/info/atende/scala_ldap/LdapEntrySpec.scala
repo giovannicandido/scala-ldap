@@ -24,6 +24,19 @@ class LdapEntrySpec extends Specification with MustMatchers {
     "return the first attribute with a given name" in {
       ldapEntry.getFirstAttributeValueWithName("displayName") must equalTo(Some("value"))
     }
+    "implement equals and hashcode correctly" in {
+      val a = LdapEntry(CN("123") / OU("test"), Some(Seq(new LdapAttribute("displayname","value"))))
+      val b = LdapEntry(CN("123") / OU("test"), Some(Seq(new LdapAttribute("displayname","value"))))
+      (a == b) must beTrue
+      a.## mustEqual b.##
+    }
+    "be usable in collections" in {
+      val a = LdapEntry(CN("123") / OU("test"), Some(Seq(new LdapAttribute("displayname","value"))))
+      val b = LdapEntry(CN("124") / OU("test"), Some(Seq(new LdapAttribute("displayname","value"))))
+      val seq = Seq(a,b)
+      seq.find(_.dn == CN("123") / OU("test")) must beSome
+    }
+
 
   }
 

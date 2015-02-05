@@ -60,6 +60,13 @@ trait RDN {
     }
     replace(value, 0)
   }
+
+  override def equals(o: scala.Any): Boolean = o match {
+    case r: RDN => r.value.equals(value)
+    case _ => false
+  }
+
+  override def hashCode(): Int = value.##
 }
 
 object RDN {

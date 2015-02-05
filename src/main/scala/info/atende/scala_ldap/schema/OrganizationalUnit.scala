@@ -1,7 +1,7 @@
 package info.atende.scala_ldap.schema
 
 
-import info.atende.scala_ldap.{LdapAttribute, LdapEntry, EntryMapper, DN}
+import info.atende.scala_ldap._
 
 /**
  * Represents a LDAP Organizational Unit
@@ -33,6 +33,10 @@ object OrganizationalUnit {
       }else{
         None
       }
+    }
+
+    override def getModificationOperations(obj: OrganizationalUnit): LdapModifications = {
+      new LdapModifications(Map.empty, Map("displayName"->obj.name), Map.empty)
     }
   }
 }

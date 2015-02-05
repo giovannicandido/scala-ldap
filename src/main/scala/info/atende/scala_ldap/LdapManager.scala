@@ -1,6 +1,6 @@
 package info.atende.scala_ldap
 
-import com.unboundid.ldap.sdk._
+import com.unboundid.ldap.sdk.LDAPConnection
 import com.unboundid.util.ssl.SSLUtil
 
 import scala.util.{Failure, Success, Try}
@@ -140,7 +140,7 @@ class LdapManager(host: String) {
     connect match {
       case Success(c) =>
         try {
-          val result = c.search(base.toString, SearchScope.ONE, s"($rdn)")
+          val result = c.search(base.toString, com.unboundid.ldap.sdk.SearchScope.ONE, s"($rdn)")
           if(result.getEntryCount > 0){
             val entry = result.getSearchEntries.get(0)
             Some(LdapEntry.mapFromSDKEntry(entry))
@@ -182,6 +182,62 @@ class LdapManager(host: String) {
   def delete[T](obj: T)(implicit mapper: EntryMapper[T]): Try[LdapResult] = {
     val entry = mapper.mapToEntry(obj)
     delete(entry.dn)
+  }
+
+  /**
+   * Try to modify an Ldap DN with the LdapModifications
+   * @param dn The DN to Modify
+   * @param modifications The modifications to perform, add, replace or delete attributes
+   * @return The LdapResult from the operation
+   */
+  def modify(dn: DN, modifications: LdapModifications): Try[LdapResult] = {
+    withConnection(c => {
+      val result = c.modify(dn.toString, modifications.transformToSDKList)
+      new LdapResult(result.getResultCode.intValue(), result.getDiagnosticMessage)
+    })
+  }
+  /**
+   * Try to modify an Ldap DN with the LdapModifications, this modifications will replace all attributes of the object
+   * with the the new object
+   * @param obj The obj to alter
+   * @param mapper A mapper to convert the objet to LdapEntry
+   * @return The LdapResult from the operation
+   */
+  def modify[T](obj: T)(implicit mapper: EntryMapper[T]): Try[LdapResult] = {
+    val entry = mapper.mapToEntry(obj)
+    val modifications = mapper.getModificationOperations(obj)
+    modify(entry.dn,modifications)
+  }
+
+  /**
+   * Processes a search operation with the provided information.  The search
+   * result entries and references will be collected internally and included in
+   * the {@code Seq[LdapEntry]} object that is returned.
+   * <BR><BR>
+   *
+   * @param  baseDN      The base DN for the search request.  It must not be
+   *                     { @code null}.
+   * @param  scope       The scope that specifies the range of entries that
+   *                     should be examined for the search.
+   * @param  filter      The string representation of the filter to use to
+   *                     identify matching entries.  It must not be
+   *                     { @code null}.
+
+   *
+   * @return  A collection of LdapEntry
+   *
+   */
+  def search(baseDN: DN, filter: String, scope: SearchScope.SearchScope): Seq[LdapEntry] = {
+    import scala.collection.JavaConverters._
+    var finalResult: Seq[LdapEntry] = Seq.empty
+    withConnection(c => {
+      val result = c.search(baseDN.toString, SearchScope.convertTOSDK(scope), filter)
+      if(result.getEntryCount > 0){
+        finalResult = result.getSearchEntries.asScala.map(LdapEntry.mapFromSDKEntry).toSeq
+      }
+      new LdapResult(result.getResultCode.intValue(), result.getDiagnosticMessage)
+    })
+    finalResult
   }
 
 }

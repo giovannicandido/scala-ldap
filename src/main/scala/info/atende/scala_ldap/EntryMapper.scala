@@ -21,4 +21,6 @@ trait EntryMapper[T] {
    * @return Optionally the LdapEntry
    */
   def mapFromEntry(entry: LdapEntry): Option[T]
+
+  def getModificationOperations(obj: T): LdapModifications
 }

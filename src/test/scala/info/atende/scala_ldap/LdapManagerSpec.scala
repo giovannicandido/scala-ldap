@@ -3,7 +3,7 @@ package info.atende.scala_ldap
 import com.unboundid.ldap.listener.{InMemoryDirectoryServer, InMemoryDirectoryServerConfig}
 import com.unboundid.ldap.sdk.LDAPConnection
 import com.unboundid.ldif.LDIFReader
-import info.atende.scala_ldap.schema.OrganizationalUnit
+import info.atende.scala_ldap.schema.{Group, OrganizationalUnit}
 import org.specs2.mutable._
 
 import scala.io.Source
@@ -94,6 +94,44 @@ class LdapManagerSpec extends Specification {
       manager.lookup(ou.dn).isDefined mustEqual(true)
       manager.delete(ou)
       manager.lookup(ou.dn).isDefined mustEqual(false)
+    }
+
+    "modify a DN object" in {
+      val manager = getManager
+      val newDisplayName = "new display name"
+      val ou = new OrganizationalUnit("This is the displayName", OU("newToModify") / CN("Users") / dc)
+      manager.add(ou).isSuccess mustEqual true
+      manager.modify(ou.dn, new LdapModifications(Map.empty,Map("displayName" -> newDisplayName),Map.empty))
+        .isSuccess mustEqual true
+      manager.lookup(ou.dn).get.hasAttributeWithValue("displayName", newDisplayName) mustEqual true
+
+    }
+
+    "modify the object with its modifications" in {
+      val manager = getManager
+      val newDisplayName = "new display name"
+      val ou = new OrganizationalUnit("This is the displayName", OU("newToModify1") / CN("Users") / dc)
+      val newOu = ou.copy(name = newDisplayName)
+      manager.add(ou).isSuccess mustEqual true
+      manager.modify(newOu)
+        .isSuccess mustEqual true
+      manager.lookup(ou.dn).get.getFirstAttributeValueWithName("displayName").get mustEqual newDisplayName
+
+    }
+
+    "search objects in the base scope" in {
+      val manager = getManager
+
+      // Add some Groups
+      val g1 = new Group(CN("g1") / CN("Users") / dc )
+      val g2 = new Group(CN("g2") / CN("Users") / dc )
+      manager.add(g1).isSuccess must beTrue
+      manager.add(g2).isSuccess must beTrue
+      val result = manager.search(CN("Users") / dc, "(objectclass=Group)", SearchScope.ONE)
+      result.size must beGreaterThan(0)
+      result.foreach(e => println(e.dn))
+      result.find(_.dn == g1.dn) must beSome
+      result.find(_.dn == g2.dn) must beSome
     }
 
   }
