@@ -7,7 +7,7 @@ import com.unboundid.util.Debug._
 import com.unboundid.util.StaticUtils._
 
 /**
- * This class represent a Entry in LDAP
+ * This class represent a Entry Attribute in LDAP
  * @author Giovanni Silva.
  *         12/13/14
  */
