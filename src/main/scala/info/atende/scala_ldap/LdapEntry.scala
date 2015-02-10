@@ -38,6 +38,7 @@ case class LdapEntry(dn: DN, attributes: Option[Seq[LdapAttribute]]) {
   def getFirstAttributeValueWithName(name:String): Option[String] = {
     attributes.flatMap({attrs:Seq[LdapAttribute] => attrs.find(_.name.equalsIgnoreCase(name)).flatMap(_.value)})
   }
+  override def toString = s"$dn {${attributes.getOrElse("").toString}}"
 }
 object LdapEntry {
   implicit def Ldap2DN(value: LdapEntry): DN = value.dn

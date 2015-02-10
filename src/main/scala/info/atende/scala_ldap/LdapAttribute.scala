@@ -262,6 +262,10 @@ class LdapAttribute(val name: String) {
     val state = Seq(getValues.toSeq.sorted, name.toLowerCase)
     state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
   }
+
+  override def toString = {
+    s"$name:${getValues.mkString("|")}"
+  }
 }
 object LdapAttribute {
   def apply(name: String, value: String) = new LdapAttribute(name, value)

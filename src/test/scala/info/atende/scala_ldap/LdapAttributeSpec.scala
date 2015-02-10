@@ -41,5 +41,12 @@ class LdapAttributeSpec extends Specification {
       f.## should be equalTo g.##
     }
 
+    "implement toString" in {
+      val a = new LdapAttribute("name", "value")
+      val b = new LdapAttribute("name","value2","value1")
+      a.toString must equalTo("name:value")
+      b.toString must equalTo("name:value2|value1")
+    }
+
   }
 }

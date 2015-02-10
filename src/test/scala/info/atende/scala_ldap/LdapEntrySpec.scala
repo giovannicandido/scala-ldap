@@ -36,7 +36,13 @@ class LdapEntrySpec extends Specification with MustMatchers {
       val seq = Seq(a,b)
       seq.find(_.dn == CN("123") / OU("test")) must beSome
     }
-
+    "implement toString correctly" in {
+      val cn = CN("1234") / OU("test")
+      val attribute = new LdapAttribute("displayname","value")
+      val attribute2 = new LdapAttribute("newAttribute","value kas")
+      val ldapEntry = LdapEntry(cn, Some(Seq(attribute,attribute2)))
+      ldapEntry.toString mustEqual s"${cn} {List($attribute, $attribute2)}"
+    }
 
   }
 
