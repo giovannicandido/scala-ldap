@@ -24,8 +24,6 @@ class DNSpec extends Specification {
       a.## mustEqual b.##
     }
 
-
-
     "concat RDN in DN" in {
       val cn = CN("Administrador") / OU("Test") / DC("example") / DC("com")
       cn.toString shouldEqual "cn=Administrador,ou=Test,dc=example,dc=com"

@@ -129,7 +129,6 @@ class LdapManagerSpec extends Specification {
       manager.add(g2).isSuccess must beTrue
       val result = manager.search(CN("Users") / dc, "(objectclass=Group)", SearchScope.ONE)
       result.size must beGreaterThan(0)
-      result.foreach(e => println(e.dn))
       result.find(_.dn == g1.dn) must beSome
       result.find(_.dn == g2.dn) must beSome
     }

@@ -40,6 +40,7 @@ case class LdapEntry(dn: DN, attributes: Option[Seq[LdapAttribute]]) {
   }
 }
 object LdapEntry {
+  implicit def Ldap2DN(value: LdapEntry): DN = value.dn
   /**
    * This function convert a Entry to the equivalent LdapEntry that is used by library consumers
    * @param entry The entry to be converted
