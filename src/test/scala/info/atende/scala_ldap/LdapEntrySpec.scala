@@ -15,14 +15,14 @@ class LdapEntrySpec extends Specification with MustMatchers {
     val ldapEntry = LdapEntry(CN("1234") / OU("test"), Some(Seq(new LdapAttribute("displayname","value"))))
     "find attribute by name" in {
       ldapEntry.findAttributeByName("displayName").head must equalTo(new LdapAttribute("displayname","value"))
-      ldapEntry.findAttributeByName("Non exists").isEmpty must equalTo(true)
+      ldapEntry.findAttributeByName("Non exists").isEmpty must beTrue
     }
     "see if has a attribute with the given name and value" in {
-      ldapEntry.hasAttributeWithValue("displayName","value") must equalTo(true)
-      ldapEntry.hasAttributeWithValue("displayName","false") must equalTo(false)
+      ldapEntry.hasAttributeWithValue("displayName","value") must beTrue
+      ldapEntry.hasAttributeWithValue("displayName","false") must beFalse
     }
     "return the first attribute with a given name" in {
-      ldapEntry.getFirstAttributeValueWithName("displayName") must equalTo(Some("value"))
+      ldapEntry.getFirstAttributeValueWithName("displayName") must beSome("value")
     }
     "implement equals and hashcode correctly" in {
       val a = LdapEntry(CN("123") / OU("test"), Some(Seq(new LdapAttribute("displayname","value"))))

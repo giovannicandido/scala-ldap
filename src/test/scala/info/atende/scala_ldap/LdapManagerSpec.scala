@@ -53,7 +53,7 @@ class LdapManagerSpec extends Specification {
       val ldapManager = new LdapManager(userDN, password, host, ds.getListenPort)
       var c: LDAPConnection = null
       ldapManager.withConnection(f => {
-        f.isConnected shouldEqual true
+        f.isConnected must beTrue
         c = f
         LdapResult(0, "Fake")
       })
@@ -64,36 +64,36 @@ class LdapManagerSpec extends Specification {
     "create a connection to be used" in {
       val ldapManager = getManager
       val connection = ldapManager.connect
-      connection.isSuccess shouldEqual true
-      connection.get.isConnected shouldEqual true
+      connection.isSuccess must beTrue
+      connection.get.isConnected must beTrue
     }
 
     "add and lookup and delete a LdapEntry using DN" in {
       val manager = getManager
       val entry = new LdapEntry(CN("user") / CN("Users") / dc, Some(List(new LdapAttribute("objectClass: top"))))
       val success = manager.add(entry)
-      success.isSuccess must beEqualTo(true)
+      success.isSuccess must beTrue
       val result = manager.lookup(CN("user"), CN("Users") / dc)
 
-      result.isDefined should beEqualTo(true)
+      result.isDefined should beTrue
 
       result.get.dn must beEqualTo(entry.dn)
 
       val deleteResult = manager.delete(entry.dn)
-      deleteResult.isSuccess must beEqualTo(true)
+      deleteResult.isSuccess must beTrue
 
       val result2 = manager.lookup(entry.dn)
-      result2.isDefined should beEqualTo(false)
+      result2.isDefined should beFalse
 
     }
 
     "add and lookup and delete a object that has a EntryMapper Implementation" in {
       val manager = getManager
       val ou = new OrganizationalUnit("This is the displayName", OU("new") / CN("Users") / dc)
-      manager.add(ou).isSuccess mustEqual(true)
-      manager.lookup(ou.dn).isDefined mustEqual(true)
+      manager.add(ou).isSuccess must beTrue
+      manager.lookup(ou.dn).isDefined must beTrue
       manager.delete(ou)
-      manager.lookup(ou.dn).isDefined mustEqual(false)
+      manager.lookup(ou.dn).isDefined must beFalse
     }
 
     "modify a DN object" in {
@@ -112,7 +112,7 @@ class LdapManagerSpec extends Specification {
       val newDisplayName = "new display name"
       val ou = new OrganizationalUnit("This is the displayName", OU("newToModify1") / CN("Users") / dc)
       val newOu = ou.copy(name = newDisplayName)
-      manager.add(ou).isSuccess mustEqual true
+      manager.add(ou).isSuccess must beTrue
       manager.modify(newOu)
         .isSuccess mustEqual true
       manager.lookup(ou.dn).get.getFirstAttributeValueWithName("displayName").get mustEqual newDisplayName

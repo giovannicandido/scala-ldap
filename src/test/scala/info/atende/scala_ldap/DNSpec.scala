@@ -31,8 +31,8 @@ class DNSpec extends Specification {
       val ou = OU("Test") / CN("Users") / DC("example") / DC("com")
       ou.toString shouldEqual "ou=Test,cn=Users,dc=example,dc=com"
 
-      cn.isInstanceOf[DN] shouldEqual true
-      ou.isInstanceOf[DN] shouldEqual true
+      cn.isInstanceOf[DN] must beTrue
+      ou.isInstanceOf[DN] must beTrue
 
     }
     "concat RDN / DN in DN" in {
@@ -53,9 +53,9 @@ class DNSpec extends Specification {
   "An DN" should {
     "concact RDN" in {
       val dn = CN("new") / OU("first")
-      dn.isInstanceOf[DN] shouldEqual true
+      dn.isInstanceOf[DN] must beTrue
       val dn2 = dn / OU("test")
-      dn2.isInstanceOf[DN] shouldEqual true
+      dn2.isInstanceOf[DN] must beTrue
       dn2.toString shouldEqual "cn=new,ou=first,ou=test"
     }
 
@@ -68,9 +68,9 @@ class DNSpec extends Specification {
 
     "contact DN" in {
       val dn = CN("new") / OU("first")
-      dn.isInstanceOf[DN] shouldEqual true
+      dn.isInstanceOf[DN] must beTrue
       val dn2 = OU("test") / OU("test2")
-      dn2.isInstanceOf[DN] shouldEqual true
+      dn2.isInstanceOf[DN] must beTrue
       val concatDN = dn / dn2
       concatDN.toString shouldEqual "cn=new,ou=first,ou=test,ou=test2"
     }

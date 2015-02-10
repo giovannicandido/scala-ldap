@@ -11,15 +11,15 @@ class LdapAttributeSpec extends Specification {
     "apply the correct equals" in {
       val a = new LdapAttribute("name","value")
       val b = new LdapAttribute("namE", "value")
-      (a == b) should beEqualTo(true)
+      (a == b) should beTrue
       val c = new LdapAttribute("no","value")
-      (a == c) should beEqualTo(false)
+      (a == c) should beFalse
       val d = new LdapAttribute("name","othervalue")
-      (a == d) should beEqualTo(false)
+      (a == d) should beFalse
 
       val e = new LdapAttribute("name","value1","value2")
       val f = new LdapAttribute("name","value2","value1")
-      (e == f) should beEqualTo(true)
+      (e == f) should beTrue
     }
 
     "apply the correct hashcode" in {
