@@ -227,17 +227,18 @@ class LdapManager(host: String) {
    * @return  A collection of LdapEntry
    *
    */
-  def search(baseDN: DN, filter: String, scope: SearchScope.SearchScope): Seq[LdapEntry] = {
+  def search(baseDN: DN, filter: String, scope: SearchScope.SearchScope): Try[SearchResult] = {
     import scala.collection.JavaConverters._
-    var finalResult: Seq[LdapEntry] = Seq.empty
-    withConnection(c => {
+    var listEntries: Seq[LdapEntry] = Seq.empty
+    val result = withConnection(c => {
       val result = c.search(baseDN.toString, SearchScope.convertTOSDK(scope), filter)
       if(result.getEntryCount > 0){
-        finalResult = result.getSearchEntries.asScala.map(LdapEntry.mapFromSDKEntry).toSeq
+        listEntries = result.getSearchEntries.asScala.map(LdapEntry.mapFromSDKEntry).toSeq
       }
       new LdapResult(result.getResultCode.intValue(), result.getDiagnosticMessage)
     })
-    finalResult
+
+    result.map(SearchResult(_,listEntries))
   }
 
 }

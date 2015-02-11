@@ -1,12 +1,13 @@
 package info.atende.scala_ldap
 
 import com.unboundid.ldap.listener.{InMemoryDirectoryServer, InMemoryDirectoryServerConfig}
-import com.unboundid.ldap.sdk.LDAPConnection
+import com.unboundid.ldap.sdk.{LDAPSearchException, LDAPConnection}
 import com.unboundid.ldif.LDIFReader
 import info.atende.scala_ldap.schema.{Group, OrganizationalUnit}
 import org.specs2.mutable._
 
 import scala.io.Source
+import scala.util.{Success, Failure}
 
 /**
  * @author Giovanni Silva.
@@ -128,9 +129,19 @@ class LdapManagerSpec extends Specification {
       manager.add(g1).isSuccess must beTrue
       manager.add(g2).isSuccess must beTrue
       val result = manager.search(CN("Users") / dc, "(objectclass=Group)", SearchScope.ONE)
-      result.size must beGreaterThan(0)
-      result.find(_.dn == g1.dn) must beSome
-      result.find(_.dn == g2.dn) must beSome
+      result must beSuccessfulTry
+      result.get.entries.size must beGreaterThan(0)
+      result.get.entries.find(_.dn == g1.dn) must beSome
+      result.get.entries.find(_.dn == g2.dn) must beSome
+    }
+
+    "return the ldap result in searchs" in {
+      val manager = getManager
+      val result = manager.search(OU("Não existe") / dc, "(objectclass=Group)", SearchScope.SUB)
+      result must beFailedTry.like {
+        case e: LDAPSearchException => e.getSearchResult.getResultCode.intValue() == 32 &&
+          e.getSearchResult.getDiagnosticMessage.startsWith("Unable to perform the search")
+      }
     }
 
   }
