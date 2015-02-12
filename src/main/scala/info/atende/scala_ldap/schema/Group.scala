@@ -2,6 +2,8 @@ package info.atende.scala_ldap.schema
 
 import info.atende.scala_ldap._
 
+import scala.util.{Success, Try}
+
 /**
  * This class represents a LDAP group of users
  * @author Giovanni Silva 
@@ -15,12 +17,12 @@ object Group {
      * @param obj Object to be mapped
      * @return The LdapEntry Equivalent to the object
      */
-    override def mapToEntry(obj: Group): LdapEntry = {
-      new LdapEntry(obj.dn, Some(Seq(
+    override def mapToEntry(obj: Group): Try[LdapEntry] = {
+      Success(new LdapEntry(obj.dn, Some(Seq(
         LdapAttribute("objectClass","group"),
         LdapAttribute("groupType","2147483650"),
         LdapAttribute("objectClass","top")
-      )))
+      ))))
     }
 
     /**

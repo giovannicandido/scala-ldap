@@ -17,7 +17,7 @@ class GroupSpec extends Specification {
       Group.groupMapper.mapFromEntry(entry) must beSome(group)
     }
     "Map from Group to LdapEntry the companion object" in {
-      Group.groupMapper.mapToEntry(group) mustEqual entry
+      Group.groupMapper.mapToEntry(group) must beSuccessfulTry.withValue(entry)
     }
   }
 }

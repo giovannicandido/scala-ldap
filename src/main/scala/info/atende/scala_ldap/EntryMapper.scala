@@ -1,5 +1,7 @@
 package info.atende.scala_ldap
 
+import scala.util.Try
+
 /**
  * This trait provide a method signature for conversions between objects and LdapEntry.
  * It is used by LdapManger to provide the same behavior in methods that accept an entry as parameter.
@@ -13,7 +15,7 @@ trait EntryMapper[T] {
    * @param obj Object to be mapped
    * @return The LdapEntry Equivalent to the object
    */
-  def mapToEntry(obj: T): LdapEntry
+  def mapToEntry(obj: T): Try[LdapEntry]
 
   /**
    * Map from a Entry to the equivalent object for this EntryMapper Type

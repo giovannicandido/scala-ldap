@@ -126,8 +126,7 @@ class LdapManager(host: String) {
    * @return A success result of operation or a Failure with the exception
    */
   def add[T](obj: T)(implicit mapper: EntryMapper[T]): Try[LdapResult] = {
-    val entry = mapper.mapToEntry(obj)
-    add(entry)
+    mapper.mapToEntry(obj).flatMap(add)
   }
 
   /**
@@ -180,8 +179,10 @@ class LdapManager(host: String) {
    * @return The LdapResult or any exceptions
    */
   def delete[T](obj: T)(implicit mapper: EntryMapper[T]): Try[LdapResult] = {
-    val entry = mapper.mapToEntry(obj)
-    delete(entry.dn)
+    for {
+      entry <- mapper.mapToEntry(obj)
+      result <- delete(entry.dn)
+    } yield result
   }
 
   /**
@@ -204,9 +205,10 @@ class LdapManager(host: String) {
    * @return The LdapResult from the operation
    */
   def modify[T](obj: T)(implicit mapper: EntryMapper[T]): Try[LdapResult] = {
-    val entry = mapper.mapToEntry(obj)
-    val modifications = mapper.getModificationOperations(obj)
-    modify(entry.dn,modifications)
+    for {
+      entry <- mapper.mapToEntry(obj)
+      result <- modify(entry.dn, mapper.getModificationOperations(obj))
+    } yield result
   }
 
   /**

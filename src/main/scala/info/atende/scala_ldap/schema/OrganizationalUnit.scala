@@ -3,6 +3,8 @@ package info.atende.scala_ldap.schema
 
 import info.atende.scala_ldap._
 
+import scala.util.{Success, Try}
+
 /**
  * Represents a LDAP Organizational Unit
  * @author Giovanni Silva 
@@ -16,8 +18,8 @@ object OrganizationalUnit {
      * @param obj Object to be mapped
      * @return The LdapEntry Equivalent to the object
      */
-    override def mapToEntry(obj: OrganizationalUnit): LdapEntry = {
-      new LdapEntry(obj.dn, Some(new LdapAttribute("ObjectClass", "Organizational-Unit") :: new LdapAttribute("displayName",obj.name) :: Nil))
+    override def mapToEntry(obj: OrganizationalUnit): Try[LdapEntry] = {
+      Success(new LdapEntry(obj.dn, Some(new LdapAttribute("ObjectClass", "Organizational-Unit") :: new LdapAttribute("displayName",obj.name) :: Nil)))
     }
 
     /**
