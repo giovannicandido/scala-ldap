@@ -19,7 +19,7 @@ object OrganizationalUnit {
      * @return The LdapEntry Equivalent to the object
      */
     override def mapToEntry(obj: OrganizationalUnit): Try[LdapEntry] = {
-      Success(new LdapEntry(obj.dn, Some(new LdapAttribute("ObjectClass", "Organizational-Unit") :: new LdapAttribute("displayName",obj.name) :: Nil)))
+      Success(new LdapEntry(obj.dn, Some(new LdapAttribute("ObjectClass", "organizationalUnit") :: new LdapAttribute("displayName",obj.name) :: Nil)))
     }
 
     /**
