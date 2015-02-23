@@ -11,6 +11,7 @@ import scala.util.{Failure, Success, Try}
  *         12/8/14
  */
 class LdapManager(host: String) {
+  val DEFAULT_TIMEOUT = 300
   private var port: Int = _
   private var userDN: DN = _
   private var password: String = _
@@ -94,11 +95,11 @@ class LdapManager(host: String) {
     }
     try {
       if (port != 0)
-        connection.connect(host, port)
+        connection.connect(host, port, DEFAULT_TIMEOUT)
       else if (useSSL)
-        connection.connect(host, LdapManager.DEFAULT_SSL_PORT)
+        connection.connect(host, LdapManager.DEFAULT_SSL_PORT, DEFAULT_TIMEOUT)
       else
-        connection.connect(host, LdapManager.DEFAULT_PORT)
+        connection.connect(host, LdapManager.DEFAULT_PORT, DEFAULT_TIMEOUT)
       if (userDN != null)
         connection.bind(userDN.toString, password)
       Success(connection)
@@ -146,7 +147,10 @@ class LdapManager(host: String) {
           }else {
             None
           }
-        } finally {
+        } catch {
+          case ex: Throwable => None
+        }
+        finally {
           c.close()
         }
       case Failure(ex) =>
