@@ -269,4 +269,5 @@ class LdapAttribute(val name: String) {
 }
 object LdapAttribute {
   def apply(name: String, value: String) = new LdapAttribute(name, value)
+  def apply(name: String, value: Array[Byte]) = new LdapAttribute(name, value)
 }
