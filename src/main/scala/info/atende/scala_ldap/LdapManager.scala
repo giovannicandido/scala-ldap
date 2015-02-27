@@ -1,6 +1,7 @@
 package info.atende.scala_ldap
 
-import com.unboundid.ldap.sdk.LDAPConnection
+import com.unboundid.ldap.sdk.{Modification, ModificationType, LDAPConnection}
+import com.unboundid.ldap.sdk.extensions.PasswordModifyExtendedRequest
 import com.unboundid.util.ssl.SSLUtil
 
 import scala.util.{Failure, Success, Try}
@@ -245,6 +246,25 @@ class LdapManager(host: String) {
     })
 
     result.map(SearchResult(_,listEntries))
+  }
+
+  /**
+   * Try to change the password for the user in Ldap
+   * @param userDN The user reset the password
+   * @param newPassword The new password
+   * @return The result of operation
+   */
+  def changePassword(userDN: DN, newPassword: String): Try[LdapResult] = {
+    import scala.collection.JavaConverters._
+    val quotedPassword = '"' + newPassword + '"'
+    val quotedPasswordBytes = quotedPassword.getBytes("UTF-16LE")
+
+    withConnection(c => {
+      val modification = new Modification(ModificationType.REPLACE, "unicodePwd", quotedPasswordBytes)
+      val modificationList =  modification :: Nil
+      val result = c.modify(userDN.toString, modificationList.asJava)
+      new LdapResult(result.getResultCode.intValue(), result.getDiagnosticMessage)
+    })
   }
 
 }
