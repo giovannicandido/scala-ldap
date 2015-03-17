@@ -17,7 +17,18 @@ case class LdapEntry(dn: DN, attributes: Option[Seq[LdapAttribute]]) {
    * @return A Sequence with the attributes that have the same name
    */
   def findAttributeByName(name: String): Seq[LdapAttribute] = {
-    attributes.getOrElse(Seq.empty).filter(_.name.equalsIgnoreCase(name))
+
+    attributes.getOrElse(Seq.empty).filter(a => extractNameFromPossibleRange(a.name).equalsIgnoreCase(name))
+  }
+
+  /**
+   * Removes any parameter from the name of attribute, by example member;range=0-1499 will became member
+   * @param name The attribute name
+   * @return The attribute without parameters
+   */
+  private def extractNameFromPossibleRange(name: String): String = {
+    val to: Int = name.indexOf(";")
+    if(to > 0) name.substring(0, to) else name
   }
 
   /**

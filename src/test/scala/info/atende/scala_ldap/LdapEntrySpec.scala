@@ -12,10 +12,13 @@ class LdapEntrySpec extends Specification with MustMatchers {
   "LdapEntry Spec".title
 
   "A LdapEntry" should {
-    val ldapEntry = LdapEntry(CN("1234") / OU("test"), Some(Seq(new LdapAttribute("displayname","value"))))
+    val ldapEntry = LdapEntry(CN("1234") / OU("test"), Some(Seq(new LdapAttribute("displayname","value"), LdapAttribute("member;range=0-1499","member"))))
     "find attribute by name" in {
       ldapEntry.findAttributeByName("displayName").head must equalTo(new LdapAttribute("displayname","value"))
       ldapEntry.findAttributeByName("Non exists").isEmpty must beTrue
+    }
+    "find attribute by name ignoring ranges" in {
+      ldapEntry.findAttributeByName("member").head.value must equalTo(Some("member"))
     }
     "see if has a attribute with the given name and value" in {
       ldapEntry.hasAttributeWithValue("displayName","value") must beTrue
