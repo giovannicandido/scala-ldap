@@ -11,51 +11,10 @@ import scala.util.{Failure, Success, Try}
  * @author Giovanni Silva.
  *         12/8/14
  */
-class LdapManager(host: String) {
+class LdapManager(host: String, var password: String = null, var port: Int = LdapManager.DEFAULT_PORT,
+                  var useSSL: Boolean = false, var userDN: DN = null, var keepConnection: Boolean = false) {
   val DEFAULT_TIMEOUT = 300
-  private var port: Int = _
-  private var userDN: DN = _
-  private var password: String = _
-  private var useSSL = false
-
-  /**
-   * Create a connection with host and port. Does not use credentials
-   * @param host Host to connect
-   * @param port Port
-   */
-  def this(host: String, port: Int) = {
-    this(host)
-    this.port = port
-  }
-
-  /**
-   * Create a connection with host and port. Does not use credentials
-   * @param host Host to connect
-   * @param port Port
-   * @param useSSL True if the connection should use SSL
-   */
-  def this(host: String, port: Int, useSSL: Boolean) = {
-    this(host)
-    this.port = port
-    this.useSSL = useSSL
-  }
-
-  /**
-   * Connect with the credentials, host port and maybe ssl
-   * @param userDN The user dn to autenticate, example cn=Admin,cn=User
-   * @param password The password to autenticate
-   * @param host The host to connect
-   * @param port The port to connect default to LdapManager.DEFAULT_PORT
-   * @param useSSL If true use SSL to connect. Default to false
-   */
-  def this(userDN: DN, password: String, host: String, port: Int = LdapManager.DEFAULT_PORT, useSSL: Boolean = false) = {
-    this(host)
-    this.port = port
-    this.userDN = userDN
-    this.password = password
-    this.useSSL = useSSL
-  }
-
+  var reuseConnection: LDAPConnection = _
   //--- Public API Starts
 
   /**
@@ -75,7 +34,8 @@ class LdapManager(host: String) {
         }catch {
           case e: Throwable => Failure(e)
         } finally {
-          connection.close()
+          if(!keepConnection)
+            connection.close()
         }
       case Failure(ex) =>
         Failure(ex)
@@ -89,25 +49,34 @@ class LdapManager(host: String) {
    * @return The success LDAPConnection or Failure
    */
   def connect: Try[LDAPConnection] = {
-    val connection = new LDAPConnection()
-    if (useSSL) {
-      val sslUtil = new SSLUtil()
-      connection.setSocketFactory(sslUtil.createSSLSocketFactory())
-    }
-    try {
-      if (port != 0)
-        connection.connect(host, port, DEFAULT_TIMEOUT)
-      else if (useSSL)
-        connection.connect(host, LdapManager.DEFAULT_SSL_PORT, DEFAULT_TIMEOUT)
-      else
-        connection.connect(host, LdapManager.DEFAULT_PORT, DEFAULT_TIMEOUT)
-      if (userDN != null)
-        connection.bind(userDN.toString, password)
-      Success(connection)
-    } catch {
-      case e: Throwable =>
-        connection.close()
-        Failure(e)
+    if(reuseConnection == null || !keepConnection) {
+      val connection = new LDAPConnection()
+      reuseConnection = connection
+      if (useSSL) {
+        val sslUtil = new SSLUtil()
+        connection.setSocketFactory(sslUtil.createSSLSocketFactory())
+      }
+      try {
+        if (port != 0)
+          connection.connect(host, port, DEFAULT_TIMEOUT)
+        else if (useSSL)
+          connection.connect(host, LdapManager.DEFAULT_SSL_PORT, DEFAULT_TIMEOUT)
+        else
+          connection.connect(host, LdapManager.DEFAULT_PORT, DEFAULT_TIMEOUT)
+        if (userDN != null)
+          connection.bind(userDN.toString, password)
+        Success(connection)
+      } catch {
+        case e: Throwable =>
+          connection.close()
+          Failure(e)
+      }
+    }else{
+      if(reuseConnection.isConnected){
+        Success(reuseConnection)
+      }else{
+        Failure(new Exception("Trying to reuse a closed connection"))
+      }
     }
   }
 
@@ -265,6 +234,14 @@ class LdapManager(host: String) {
       val result = c.modify(userDN.toString, modificationList.asJava)
       new LdapResult(result.getResultCode.intValue(), result.getDiagnosticMessage)
     })
+  }
+
+  /**
+   * Close a persisted connection if any
+   */
+  def closeConnection: Unit = {
+    if(reuseConnection != null)
+      reuseConnection.close()
   }
 
 }

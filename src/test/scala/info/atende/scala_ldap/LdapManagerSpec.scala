@@ -25,8 +25,9 @@ class LdapManagerSpec extends Specification {
   val adConfiguration = "/configuration.ldif"
   var ds: InMemoryDirectoryServer = _
 
-  def getManager: LdapManager = new LdapManager(userDN, password, host, ds.getListenPort)
-
+  def getManager: LdapManager = new LdapManager(host, userDN= userDN, password=password, port = ds.getListenPort)
+  def getManagerWithPersistentConnection: LdapManager = new LdapManager(host, userDN= userDN, password=password,
+    port = ds.getListenPort, keepConnection = true)
   "Ldap Manager Spec".title
 
   step({
@@ -51,7 +52,7 @@ class LdapManagerSpec extends Specification {
 
   "LdapManager" should {
     "connect to a ldap server and disconnect after function is executed" in {
-      val ldapManager = new LdapManager(userDN, password, host, ds.getListenPort)
+      val ldapManager = new LdapManager(host, userDN= userDN, password=password, port = ds.getListenPort)
       var c: LDAPConnection = null
       ldapManager.withConnection(f => {
         f.isConnected must beTrue
@@ -67,6 +68,41 @@ class LdapManagerSpec extends Specification {
       val connection = ldapManager.connect
       connection.isSuccess must beTrue
       connection.get.isConnected must beTrue
+    }
+
+    "configure to create only one connection in the lifecycle of object" in {
+      val ldapManager = getManagerWithPersistentConnection
+      val connection1 = ldapManager.connect
+      val connection2 = ldapManager.connect
+      connection1.isSuccess must beTrue
+      connection2.isSuccess must beTrue
+      connection1.get.getConnectionID must beEqualTo(connection2.get.getConnectionID)
+      var connectionId1: Long = 0
+      var connectionId2: Long = 1
+      ldapManager.withConnection(f => {
+        f.isConnected must beTrue
+        connectionId1 = f.getConnectionID
+        LdapResult(0, "Fake")
+      })
+      ldapManager.withConnection(f => {
+        f.isConnected must beTrue
+        connectionId2 = f.getConnectionID
+        LdapResult(0, "Fake")
+      })
+      ldapManager.closeConnection
+      connectionId1 must equalTo(connectionId2)
+
+    }
+
+    "Close a persistent connection" in {
+      val ldapManager = getManagerWithPersistentConnection
+      val connection = ldapManager.connect
+      connection.isSuccess must beTrue
+      connection.get.isConnected must beTrue
+      ldapManager.closeConnection
+      connection.get.isConnected must beFalse
+      val connection2 = ldapManager.connect
+      connection2 must beFailedTry
     }
 
     "add and lookup and delete a LdapEntry using DN" in {
