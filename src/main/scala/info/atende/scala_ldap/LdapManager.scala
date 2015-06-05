@@ -49,9 +49,8 @@ class LdapManager(host: String, var password: String = null, var port: Int = Lda
    * @return The success LDAPConnection or Failure
    */
   def connect: Try[LDAPConnection] = {
-    if(reuseConnection == null || !keepConnection) {
-      val connection = new LDAPConnection()
-      reuseConnection = connection
+
+    def connectImpl(connection: LDAPConnection): Try[LDAPConnection] ={
       if (useSSL) {
         val sslUtil = new SSLUtil()
         connection.setSocketFactory(sslUtil.createSSLSocketFactory())
@@ -71,11 +70,16 @@ class LdapManager(host: String, var password: String = null, var port: Int = Lda
           connection.close()
           Failure(e)
       }
+    }
+
+    if(reuseConnection == null || !keepConnection) {
+      val connection = new LDAPConnection()
+      connectImpl(connection)
     }else{
       if(reuseConnection.isConnected){
         Success(reuseConnection)
       }else{
-        Failure(new Exception("Trying to reuse a closed connection"))
+        connectImpl(reuseConnection)
       }
     }
   }
