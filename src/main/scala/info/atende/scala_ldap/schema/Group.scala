@@ -38,6 +38,6 @@ object Group {
       }
     }
 
-    override def getModificationOperations(obj: Group): LdapModifications = new LdapModifications(Map.empty, Map.empty, Map.empty)
+    override def getModificationOperations(obj: Group): LdapModifications = new LdapModifications(Map.empty, Map.empty, List.empty)
   }
 }

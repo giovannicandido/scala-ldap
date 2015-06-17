@@ -38,7 +38,7 @@ object OrganizationalUnit {
     }
 
     override def getModificationOperations(obj: OrganizationalUnit): LdapModifications = {
-      new LdapModifications(Map.empty, Map("displayName"->obj.name), Map.empty)
+      new LdapModifications(Map.empty, Map("displayName"->obj.name), List.empty)
     }
   }
 }
