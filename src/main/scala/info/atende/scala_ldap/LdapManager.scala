@@ -32,7 +32,7 @@ class LdapManager(host: String, var password: String = null, var port: Int = Lda
           val result = f(connection)
           Success(result)
         }catch {
-          case e: Throwable => Failure(e)
+          case e: Exception => Failure(e)
         } finally {
           if(!keepConnection)
             connection.close()
