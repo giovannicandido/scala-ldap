@@ -225,16 +225,20 @@ class LdapManager(host: String, var password: String = null, var port: Int = Lda
    * Try to change the password for the user in Ldap
    * @param userDN The user reset the password
    * @param newPassword The new password
+   * @param mustChangeOnNextLogon If the user need to change password on next logon. Default to false
    * @return The result of operation
    */
-  def changePassword(userDN: DN, newPassword: String): Try[LdapResult] = {
+  def changePassword(userDN: DN, newPassword: String, mustChangeOnNextLogon: Boolean = false): Try[LdapResult] = {
     import scala.collection.JavaConverters._
     val quotedPassword = '"' + newPassword + '"'
     val quotedPasswordBytes = quotedPassword.getBytes("UTF-16LE")
 
     withConnection(c => {
       val modification = new Modification(ModificationType.REPLACE, "unicodePwd", quotedPasswordBytes)
-      val modificationList =  modification :: Nil
+      var modificationList =  modification :: Nil
+      if(mustChangeOnNextLogon) {
+        modificationList = modificationList :+ new Modification(ModificationType.REPLACE, "pwdLastSet", "0")
+      }
       val result = c.modify(userDN.toString, modificationList.asJava)
       new LdapResult(result.getResultCode.intValue(), result.getDiagnosticMessage)
     })
