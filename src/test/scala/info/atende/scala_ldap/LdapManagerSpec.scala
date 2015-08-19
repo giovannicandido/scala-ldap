@@ -54,11 +54,12 @@ class LdapManagerSpec extends Specification {
     "connect to a ldap server and disconnect after function is executed" in {
       val ldapManager = new LdapManager(host, userDN= userDN, password=password, port = ds.getListenPort)
       var c: LDAPConnection = null
-      ldapManager.withConnection(f => {
+      val result = ldapManager.withConnection(f => {
         f.isConnected must beTrue
         c = f
         LdapResult(0, "Fake")
       })
+      result.isSuccess must beTrue
       // After the function is executed the connection should be closed
       c.isConnected shouldEqual false
     }
@@ -138,7 +139,7 @@ class LdapManagerSpec extends Specification {
       val newDisplayName = "new display name"
       val ou = new OrganizationalUnit("This is the displayName", OU("newToModify") / CN("Users") / dc)
       manager.add(ou).isSuccess mustEqual true
-      manager.modify(ou.dn, new LdapModifications(Map.empty,Map("displayName" -> newDisplayName),Map.empty))
+      manager.modify(ou.dn, new LdapModifications(Map.empty,Map("displayName" -> newDisplayName), List.empty))
         .isSuccess mustEqual true
       manager.lookup(ou.dn).get.hasAttributeWithValue("displayName", newDisplayName) mustEqual true
 
