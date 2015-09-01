@@ -122,7 +122,7 @@ class LdapManager(host: String, var password: String = null, var port: Int = Lda
             None
           }
         } catch {
-          case ex: Throwable => None
+          case ex: Exception => None
         }
         finally {
           c.close()
