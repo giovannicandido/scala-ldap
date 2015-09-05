@@ -8,11 +8,13 @@ import org.specs2.mutable._
 
 import scala.io.Source
 import scala.util.{Success, Failure}
-
+import org.specs2.runner.JUnitRunner
+import org.junit.runner.RunWith
 /**
  * @author Giovanni Silva.
  *         12/8/14
  */
+@RunWith(classOf[JUnitRunner])
 class LdapManagerSpec extends Specification {
   val dc = DC("example") / DC("local")
   val userDN = CN("Administrator") / CN("Users") / dc
@@ -31,6 +33,7 @@ class LdapManagerSpec extends Specification {
   "Ldap Manager Spec".title
 
   step({
+    println("Starting InMemoryDirectoryServer")
     // Create the configuration to use for the server.
     val config: InMemoryDirectoryServerConfig =
       new InMemoryDirectoryServerConfig(dc.toString)

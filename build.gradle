@@ -1,0 +1,25 @@
+apply plugin: 'scala'
+
+jar {
+    baseName 'scala-ldap'
+    version '1.0'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://dl.bintray.com/scalaz/releases'
+    }
+}
+
+ext {
+    scalaVersion = '2.11.6'
+    scalaV = '_2.11'
+}
+
+dependencies {
+    compile "org.scala-lang:scala-library:$scalaVersion",
+            "com.unboundid:unboundid-ldapsdk:2.3.8"
+    testCompile "org.specs2:specs2$scalaV:2.4.14",
+                "junit:junit:4.10"
+}

@@ -1,9 +1,12 @@
 package info.atende.scala_ldap
 import org.specs2.mutable._
+import org.specs2.runner.JUnitRunner
+import org.junit.runner.RunWith
 /**
  * @author Giovanni Silva 
  *         03/02/15.
  */
+@RunWith(classOf[JUnitRunner])
 class LdapAttributeSpec extends Specification {
   "LdapAttribute Spec".title
 

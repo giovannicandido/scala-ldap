@@ -2,11 +2,13 @@ package info.atende.scala_ldap.schema
 
 import info.atende.scala_ldap.{LdapAttribute, LdapEntry, OU, CN}
 import org.specs2.mutable.Specification
-
+import org.specs2.runner.JUnitRunner
+import org.junit.runner.RunWith
 /**
  * This is the schema.Group spec
  * @author Giovanni Silva
  */
+@RunWith(classOf[JUnitRunner])
 class GroupSpec extends Specification {
   "An Group schema" should {
     val dn = CN("test") / OU("groupName")

@@ -3,11 +3,13 @@ package info.atende.scala_ldap
 import com.unboundid.ldap.sdk.{Attribute, Entry}
 import org.specs2.matcher.MustMatchers
 import org.specs2.mutable._
-
+import org.specs2.runner.JUnitRunner
+import org.junit.runner.RunWith
 /**
  * @author Giovanni Silva 
  *         03/02/15.
  */
+@RunWith(classOf[JUnitRunner])
 class LdapEntrySpec extends Specification with MustMatchers {
   "LdapEntry Spec".title
 

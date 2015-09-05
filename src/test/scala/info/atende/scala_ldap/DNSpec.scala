@@ -1,12 +1,14 @@
 package info.atende.scala_ldap
 
 import org.specs2.mutable._
-
+import org.specs2.runner.JUnitRunner
+import org.junit.runner.RunWith
 /**
  * Specifications for Distiguish Name
  * @author Giovanni Silva.
  *         12/9/14
  */
+@RunWith(classOf[JUnitRunner])
 class DNSpec extends Specification {
   "Distinguish Name Spec".title
   "DN (Distinguish Name) and RDN (Relative Distinguish Name)".txt
