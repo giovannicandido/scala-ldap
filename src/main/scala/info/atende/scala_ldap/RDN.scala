@@ -58,7 +58,7 @@ trait RDN {
         replace(value.replace(caracter.toString, s"\\$caracter"), position + 1)
       }
     }
-    replace(value, 0)
+    replace(value, 0).trim
   }
 
   override def equals(o: scala.Any): Boolean = o match {
