@@ -13,7 +13,7 @@ import scala.util.{Failure, Success, Try}
  */
 class LdapManager(host: String, var password: String = null, var port: Int = LdapManager.DEFAULT_PORT,
                   var useSSL: Boolean = false, var userDN: DN = null, var keepConnection: Boolean = false) {
-  val DEFAULT_TIMEOUT = 300
+  val DEFAULT_TIMEOUT = 500
   var reuseConnection: LDAPConnection = _
   //--- Public API Starts
 
@@ -49,7 +49,11 @@ class LdapManager(host: String, var password: String = null, var port: Int = Lda
    * @return The success LDAPConnection or Failure
    */
   def connect: Try[LDAPConnection] = {
-
+    /**
+     * Connect to the server
+     * @param connection The connection object to use
+     * @return An LDAPConnection
+     */
     def connectImpl(connection: LDAPConnection): Try[LDAPConnection] ={
       if (useSSL) {
         val sslUtil = new SSLUtil()
@@ -71,7 +75,7 @@ class LdapManager(host: String, var password: String = null, var port: Int = Lda
           Failure(e)
       }
     }
-
+    // See if the connection is to keep
     if(reuseConnection == null || !keepConnection) {
       val connection = new LDAPConnection()
       connectImpl(connection)

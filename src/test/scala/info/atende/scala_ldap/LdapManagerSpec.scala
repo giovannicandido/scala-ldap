@@ -55,7 +55,7 @@ class LdapManagerSpec extends Specification {
 
   "LdapManager" should {
     "connect to a ldap server and disconnect after function is executed" in {
-      val ldapManager = new LdapManager(host, userDN= userDN, password=password, port = ds.getListenPort)
+      val ldapManager = getManager
       var c: LDAPConnection = null
       val result = ldapManager.withConnection(f => {
         f.isConnected must beTrue
