@@ -105,8 +105,6 @@ class LdapManagerSpec extends Specification {
       connection.get.isConnected must beTrue
       ldapManager.closeConnection
       connection.get.isConnected must beFalse
-      val connection2 = ldapManager.connect
-      connection2 must beFailedTry
     }
 
     "add and lookup and delete a LdapEntry using DN" in {

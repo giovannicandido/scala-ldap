@@ -2,7 +2,7 @@ package info.atende.scala_ldap
 
 import com.unboundid.ldap.sdk.{Modification, ModificationType, LDAPConnection}
 import com.unboundid.ldap.sdk.extensions.PasswordModifyExtendedRequest
-import com.unboundid.util.ssl.SSLUtil
+import com.unboundid.util.ssl.{TrustAllTrustManager, SSLUtil}
 
 import scala.util.{Failure, Success, Try}
 
@@ -51,40 +51,32 @@ class LdapManager(host: String, var password: String = null, var port: Int = Lda
   def connect: Try[LDAPConnection] = {
     /**
      * Connect to the server
-     * @param connection The connection object to use
      * @return An LDAPConnection
      */
-    def connectImpl(connection: LDAPConnection): Try[LDAPConnection] ={
-      if (useSSL) {
-        val sslUtil = new SSLUtil()
-        connection.setSocketFactory(sslUtil.createSSLSocketFactory())
-      }
-      try {
-        if (port != 0)
-          connection.connect(host, port, DEFAULT_TIMEOUT)
-        else if (useSSL)
-          connection.connect(host, LdapManager.DEFAULT_SSL_PORT, DEFAULT_TIMEOUT)
-        else
-          connection.connect(host, LdapManager.DEFAULT_PORT, DEFAULT_TIMEOUT)
-        if (userDN != null)
-          connection.bind(userDN.toString, password)
-        Success(connection)
-      } catch {
-        case e: Throwable =>
-          connection.close()
-          Failure(e)
+    def connectImpl(): Try[LDAPConnection] ={
+      Try {
+        val connection = if(useSSL) {
+          val sslUtil = new SSLUtil()
+          new LDAPConnection(sslUtil.createSSLSocketFactory())
+        }else {
+          new LDAPConnection()
+        }
+        connection.connect(host, port, DEFAULT_TIMEOUT)
+        connection.bind(userDN.toString, password)
+        connection
       }
     }
-    // See if the connection is to keep
-    if(reuseConnection == null || !keepConnection) {
-      val connection = new LDAPConnection()
-      connectImpl(connection)
-    }else{
-      if(reuseConnection.isConnected){
+    if(keepConnection){
+
+      if(reuseConnection != null && reuseConnection.isConnected){
         Success(reuseConnection)
       }else{
-        connectImpl(reuseConnection)
+        val tryConnection = connectImpl()
+        reuseConnection = tryConnection.getOrElse(null)
+        tryConnection
       }
+    }else{
+      connectImpl()
     }
   }
 
