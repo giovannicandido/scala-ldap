@@ -1,6 +1,6 @@
 package info.atende.scala_ldap
 
-import com.unboundid.ldap.sdk.{Modification, ModificationType, LDAPConnection}
+import com.unboundid.ldap.sdk.{ModifyDNRequest, Modification, ModificationType, LDAPConnection}
 import com.unboundid.ldap.sdk.extensions.PasswordModifyExtendedRequest
 import com.unboundid.util.ssl.{TrustAllTrustManager, SSLUtil}
 
@@ -101,7 +101,8 @@ class LdapManager(host: String, var password: String = null, var port: Int = Lda
   }
 
   /**
-   * This method search and return the first element found if any
+   * This method search and return the first element found if any, using a exact match
+   * Ex.: CN=123,OU=Example,DC=example,DC=local will match only if exist exact as is
    * @param rdn The RDN atribute of the element. Ex.: CN("1234")
    * @param base The base to search the element, only elements that are direct childs of the base should be considered
    * @return The LdapEntry if Any
@@ -127,6 +128,11 @@ class LdapManager(host: String, var password: String = null, var port: Int = Lda
         None
     }
   }
+  /**
+   * This method search and return the first element found if any, using a exact match
+   * Ex.: CN=123,OU=Example,DC=example,DC=local will match only if exist exact as is
+   * @return The LdapEntry if Any
+   */
   def lookup(dn: DN): Option[LdapEntry] = {
     val base = DN(dn.values.tail)
     val rdn = dn.values.head
@@ -237,6 +243,18 @@ class LdapManager(host: String, var password: String = null, var port: Int = Lda
       }
       val result = c.modify(userDN.toString, modificationList.asJava)
       new LdapResult(result.getResultCode.intValue(), result.getDiagnosticMessage)
+    })
+  }
+
+  /**
+   * Execute a modifyDNRequest on server
+   * @param request The modifyDNRequest
+   * @return The result operation
+   */
+  def modifyDn(request: ModifyDNRequest): Try[LdapResult] = {
+    withConnection(connection => {
+      val result = connection.modifyDN(request)
+      LdapResult(result.getResultCode.intValue(), result.getDiagnosticMessage)
     })
   }
 

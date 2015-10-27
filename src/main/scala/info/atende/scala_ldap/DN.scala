@@ -33,6 +33,23 @@ case class DN(values: List[RDN]) {
     DN(values ++ dn.values)
   }
 
+  /**
+   * Return the first RDN of the DN
+   * @return The RDN of DN Ex.: A DN composed of CN=Users,OU=Test should return CN=Users
+   */
+  def rdn:RDN = values.head
+
+  /**
+   * Return the last elements of the DN, or a empty DN
+   * @return a new DN or empty Ex.: A DN composed of CN=Users,OU=Test,DC=Example should return OU=Test,DC=Example
+   */
+  def base:DN = DN(values.tail)
+
+  /**
+   * Test if this DN is empty
+   * @return If the DN is empty
+   */
+  def isEmpty: Boolean = values.isEmpty
   override def toString = values.map(_.toString).mkString(",")
 }
 
