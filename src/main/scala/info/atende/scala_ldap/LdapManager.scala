@@ -1,6 +1,6 @@
 package info.atende.scala_ldap
 
-import com.unboundid.ldap.sdk.{ModifyDNRequest, Modification, ModificationType, LDAPConnection}
+import com.unboundid.ldap.sdk._
 import com.unboundid.ldap.sdk.extensions.PasswordModifyExtendedRequest
 import com.unboundid.util.ssl.{TrustAllTrustManager, SSLUtil}
 
@@ -201,7 +201,7 @@ class LdapManager(host: String, var password: String = null, var port: Int = Lda
    *                     { @code null}.
    * @param  scope       The scope that specifies the range of entries that
    *                     should be examined for the search.
-   * @param  filter      The string representation of the filter to use to
+   * @param  filter      The filter to use to
    *                     identify matching entries.  It must not be
    *                     { @code null}.
 
@@ -209,7 +209,7 @@ class LdapManager(host: String, var password: String = null, var port: Int = Lda
    * @return  A collection of LdapEntry
    *
    */
-  def search(baseDN: DN, filter: String, scope: SearchScope.SearchScope): Try[SearchResult] = {
+  def search(baseDN: DN, filter: Filter, scope: SearchScope.SearchScope): Try[SearchResult] = {
     import scala.collection.JavaConverters._
     var listEntries: Seq[LdapEntry] = Seq.empty
     val result = withConnection(c => {
@@ -221,6 +221,27 @@ class LdapManager(host: String, var password: String = null, var port: Int = Lda
     })
 
     result.map(SearchResult(_,listEntries))
+  }
+  /**
+    * Processes a search operation with the provided information.  The search
+    * result entries and references will be collected internally and included in
+    * the {@code Seq[LdapEntry]} object that is returned.
+    * <BR><BR>
+    *
+    * @param  baseDN      The base DN for the search request.  It must not be
+    *                     { @code null}.
+    * @param  scope       The scope that specifies the range of entries that
+    *                     should be examined for the search.
+    * @param  filter      The string representation of the filter to use to
+    *                     identify matching entries.  It must not be
+    *                     { @code null}.
+
+    *
+    * @return  A collection of LdapEntry
+    *
+    */
+  def search(baseDN: DN, filter: String, scope: SearchScope.SearchScope): Try[SearchResult] = {
+    search(baseDN, Filter.create(filter), scope)
   }
 
   /**
