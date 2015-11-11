@@ -108,10 +108,11 @@ class LdapManager(host: String, var password: String = null, var port: Int = Lda
    * @return The LdapEntry if Any
    */
   def lookup(rdn: RDN, base: DN): Option[LdapEntry] = {
+    val filter = Filter.createEqualityFilter(rdn.Type, rdn.value)
     connect match {
       case Success(c) =>
         try {
-          val result = c.search(base.toString, com.unboundid.ldap.sdk.SearchScope.ONE, s"($rdn)")
+          val result = c.search(base.toString, com.unboundid.ldap.sdk.SearchScope.ONE, filter)
           if(result.getEntryCount > 0){
             val entry = result.getSearchEntries.get(0)
             Some(LdapEntry.mapFromSDKEntry(entry))
