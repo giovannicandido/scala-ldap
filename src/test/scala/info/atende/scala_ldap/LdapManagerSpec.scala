@@ -1,15 +1,14 @@
 package info.atende.scala_ldap
 
 import com.unboundid.ldap.listener.{InMemoryDirectoryServer, InMemoryDirectoryServerConfig}
-import com.unboundid.ldap.sdk.{LDAPSearchException, LDAPConnection}
+import com.unboundid.ldap.sdk.{LDAPConnection, LDAPSearchException}
 import com.unboundid.ldif.LDIFReader
 import info.atende.scala_ldap.schema.{Group, OrganizationalUnit}
+import org.junit.runner.RunWith
 import org.specs2.mutable._
+import org.specs2.runner.JUnitRunner
 
 import scala.io.Source
-import scala.util.{Success, Failure}
-import org.specs2.runner.JUnitRunner
-import org.junit.runner.RunWith
 /**
  * @author Giovanni Silva.
  *         12/8/14
@@ -135,7 +134,7 @@ class LdapManagerSpec extends Specification {
       manager.lookup(ou.dn).isDefined must beFalse
     }
 
-    "modify a DN object" in {
+    "modify a objet by DN" in {
       val manager = getManager
       val newDisplayName = "new display name"
       val ou = new OrganizationalUnit("This is the displayName", OU("newToModify") / CN("Users") / dc)
@@ -146,7 +145,7 @@ class LdapManagerSpec extends Specification {
 
     }
 
-    "modify the object with its modifications" in {
+    "modify a object by the modification in EntryMapper" in {
       val manager = getManager
       val newDisplayName = "new display name"
       val ou = new OrganizationalUnit("This is the displayName", OU("newToModify1") / CN("Users") / dc)
