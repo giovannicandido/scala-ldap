@@ -1,8 +1,7 @@
 package info.atende.scala_ldap
 
 import com.unboundid.ldap.sdk._
-import com.unboundid.ldap.sdk.extensions.PasswordModifyExtendedRequest
-import com.unboundid.util.ssl.{TrustAllTrustManager, SSLUtil}
+import com.unboundid.util.ssl.SSLUtil
 
 import scala.util.{Failure, Success, Try}
 
@@ -205,16 +204,14 @@ class LdapManager(host: String, var password: String = null, var port: Int = Lda
    * @param  filter      The filter to use to
    *                     identify matching entries.  It must not be
    *                     { @code null}.
-
-   *
    * @return  A collection of LdapEntry
    *
    */
-  def search(baseDN: DN, filter: Filter, scope: SearchScope.SearchScope): Try[SearchResult] = {
+  def search(baseDN: DN, filter: Filter, scope: SearchScope.SearchScope, sizeLimit: Int = 1000, timeLimit: Int = 0): Try[SearchResult] = {
     import scala.collection.JavaConverters._
     var listEntries: Seq[LdapEntry] = Seq.empty
     val result = withConnection(c => {
-      val result = c.search(baseDN.toString, SearchScope.convertTOSDK(scope), filter)
+      val result = c.search(baseDN.toString, SearchScope.convertTOSDK(scope), DereferencePolicy.SEARCHING, sizeLimit, timeLimit, false, filter)
       if(result.getEntryCount > 0){
         listEntries = result.getSearchEntries.asScala.map(LdapEntry.mapFromSDKEntry).toSeq
       }
