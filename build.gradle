@@ -1,9 +1,17 @@
 apply plugin: 'scala'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
-jar {
-    baseName 'scala-ldap'
-    version '1.0'
-}
+
+group = "info.atende.ldap"
+archivesBaseName = "scala-ldap"
+version="0.1.0-SNAPSHOT"
+
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 
 repositories {
     mavenCentral()
@@ -22,4 +30,72 @@ dependencies {
             "com.unboundid:unboundid-ldapsdk:2.3.8"
     testCompile "org.specs2:specs2$scalaV:2.4.14",
                 "junit:junit:4.10"
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'Scala Ldap'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'A wrapper around unboundid sdk for ldap connections'
+                url 'https://atende.github.io/scala-ldap/'
+
+                scm {
+                    connection 'scm:git:git@github.com:atende/scala-ldap.git'
+                    developerConnection 'scm:git:git@github.com:atende/scala-ldap.git'
+                    url 'https://github.com/atende/scala-ldap'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'giovanni'
+                        name 'Giovanni Silva'
+                        email 'giovanni@atende.info'
+                    }
+                }
+            }
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '2.13'
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
 }
