@@ -28,7 +28,8 @@ object OrganizationalUnit {
      * @return Optionally the LdapEntry
      */
     override def mapFromEntry(entry: LdapEntry): Option[OrganizationalUnit] = {
-      if(entry.hasAttributeWithValue("objectclass","Organizational-Unit")){
+      if(entry.hasAttributeWithValue("objectclass","Organizational-Unit")
+        || entry.hasAttributeWithValue("objectclass","organizationalUnit") ){
         val name = entry.getFirstAttributeValueWithName("displayName").getOrElse("")
         val dn = entry.dn
         Some(new OrganizationalUnit(name, dn))
