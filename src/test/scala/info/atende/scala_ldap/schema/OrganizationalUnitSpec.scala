@@ -26,6 +26,12 @@ class OrganizationalUnitSpec extends Specification {
         LdapAttribute("displayName","group"))))
       OrganizationalUnit.ouMapper.mapFromEntry(entry) must beSome(ou)
     }
+    "Map organizational unit from active directory" in {
+      val entry = LdapEntry(dn, Some(Seq(LdapAttribute("objectClass","top|organizationalUnit"),
+        LdapAttribute("displayName", "group"))))
+
+      OrganizationalUnit.ouMapper.mapFromEntry(entry) must beSome(ou)
+    }
     "Map from Group to LdapEntry" in {
       OrganizationalUnit.ouMapper.mapToEntry(ou) must beSuccessfulTry.withValue(entry)
     }

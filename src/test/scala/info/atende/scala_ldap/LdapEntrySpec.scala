@@ -58,6 +58,28 @@ class LdapEntrySpec extends Specification with MustMatchers {
       ldapEntry.toString mustEqual s"${cn} {List($attribute, $attribute2)}"
     }
 
+    "has objectClassName" in {
+      val cn = CN("1234") / OU("test")
+      val attribute = new LdapAttribute("displayname","value")
+      val attribute2 = new LdapAttribute("newAttribute","value kas")
+      val className = LdapAttribute("objectClass","Type")
+      val ldapEntry = LdapEntry(cn, Some(Seq(attribute,attribute2, className)))
+      ldapEntry.hasObjectClass("type") must beTrue
+      val ldapEntry2 = ldapEntry.copy(attributes = Some(Seq(LdapAttribute("objectClass", "newType"))))
+      ldapEntry2.hasObjectClass("type") must beFalse
+    }
+
+    "has objectClassName Active Directory" in {
+      val cn = CN("1234") / OU("test")
+      val attribute = new LdapAttribute("displayname","value")
+      val attribute2 = new LdapAttribute("newAttribute","value kas")
+      val className = LdapAttribute("objectClass","top|Type")
+      val ldapEntry = LdapEntry(cn, Some(Seq(attribute,attribute2, className)))
+      ldapEntry.hasObjectClass("type") must beTrue
+      val ldapEntry2 = ldapEntry.copy(attributes = Some(Seq(LdapAttribute("objectClass", "top|newType"))))
+      ldapEntry2.hasObjectClass("type") must beFalse
+    }
+
   }
 
   "A LdapEntry Object" should {
