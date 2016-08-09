@@ -38,6 +38,17 @@ class LdapEntrySpec extends Specification with MustMatchers {
     "ignore case of attribute in getFistAttributeValueWithName" in {
       ldapEntry.getFirstAttributeValueWithName("displAyNaMe") must beSome("value")
     }
+    "findAttributByName return multiple attributes" in {
+          val ldapEntry = LdapEntry(CN("1234") / OU("test"), Some(Seq(LdapAttribute("member","value"), LdapAttribute("member;range=0-1499","member"))))
+          val attributes = ldapEntry.findAttributeByName("member")
+          attributes  must have size(2)
+          attributes must contain(LdapAttribute("member", "value"))
+    }
+    "getFirstAttributeValueWithName return one value from multiples" in {
+          val ldapEntry = LdapEntry(CN("1234") / OU("test"), Some(Seq(LdapAttribute("member","value"), LdapAttribute("member","member"))))
+          val attributes = ldapEntry.getFirstAttributeValueWithName("member")
+          attributes must beSome("value")
+    }
     "implement equals and hashcode correctly" in {
       val a = LdapEntry(CN("123") / OU("test"), Some(Seq(new LdapAttribute("displayname","value"))))
       val b = LdapEntry(CN("123") / OU("test"), Some(Seq(new LdapAttribute("displayname","value"))))
