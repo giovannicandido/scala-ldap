@@ -26,6 +26,13 @@ class DNSpec extends Specification {
       a.## mustEqual b.##
     }
 
+    "equals should ignore case" in {
+      val a =  CN("value") / OU("ValuE") / DC("PUCMINAS") / DC("net")
+      val b = CN("VALUE") / OU("value") / DC("pucminas") / DC("NeT")
+      a mustEqual b
+      a.## mustEqual b.##
+    }
+
     "concat RDN in DN" in {
       val cn = CN("Administrador") / OU("Test") / DC("example") / DC("com")
       cn.toString shouldEqual "cn=Administrador,ou=Test,dc=example,dc=com"

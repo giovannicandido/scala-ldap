@@ -62,11 +62,11 @@ trait RDN {
   }
 
   override def equals(o: scala.Any): Boolean = o match {
-    case r: RDN => r.value.equals(value)
+    case r: RDN => r.value.equalsIgnoreCase(value)
     case _ => false
   }
 
-  override def hashCode(): Int = value.##
+  override def hashCode(): Int = value.toLowerCase().##
 }
 
 object RDN {
