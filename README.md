@@ -137,4 +137,4 @@ There is more, check the specs. Thanks :-)
 If you are wondering, the app using this library syncs ~= 60.000 accounts every 2 days in the most dumb way: Batch.
 As a result milions of operations have been done to Active Directory to date, taking 6-8 hours per sync, the app is very successfull on business, so it just works well. The problem offcouse is the constrains that made me do it in this dumb way.
 
-An big improviment started but not completed, is to sync AD and do diff in SQL database, then apply only the operations that need in batch. This has been done for sync when remmoving or blocking accounts, but not in the main batch operations. As a result an operation which would take 6 hours now take less than a minute most of times.
+An big improviment started but not completed, is to sync AD and do diff in SQL database, then apply only the operations that need in batch. This has been done for sync when removing or blocking accounts, but not in the main batch operations. As a result an operation which would take 6 hours now take less than a minute most of times.
