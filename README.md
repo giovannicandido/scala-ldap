@@ -1,4 +1,4 @@
-# scala-ldap
+# Scala Ldap
 
 This project is a wrapper for UnboundID SDK to ldap access in a more scala idiomatic way.
 
