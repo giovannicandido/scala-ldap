@@ -4,8 +4,8 @@ This project is a wrapper for UnboundID SDK to ldap access in a more scala idiom
 
 Is relative simple and battle tested in one mission critical product app as the underline communication ldap protocol.
 
-It take me a long time to publish this library, and I'm not maintaining anymore, I almost forgot about it. 
-But fell free to contact if this stuff is usefull for you (ldap is a pain in the a** :-), I will be happy ;-)
+A long time as been passed to publish this library, and I'm not maintaining anymore, I almost forgot about it. 
+But fell free to contact if this stuff is usefull for you I will be happy ;-) (ldap is a pain in the a** :-)
 
 # Getting started
 
@@ -45,7 +45,7 @@ val manager = getManager
       result2.isDefined should beFalse
 ```
 
-LdapManager class will do operations in ldap, and did I mention that it handles the connection open close in for us?
+LdapManager class will do operations in ldap. And did I mention that it handles the connection open close in for us?
 
 Take a look at `LdapManagerSpec`
 
@@ -57,7 +57,35 @@ val result = ldapManager.withConnection(f => {
       })
 ```
 
-The connection will be properly handled, no matter what happens (any exeception).
+The connection will be properly handled, no matter what happens (any exeception). If you do too many connections this could be problematic, one improviment not implemented is to create a pool, but you could just keep the connection opened and close manually:
+
+```
+"configure to create only one connection in the lifecycle of object" in {
+      val ldapManager = getManagerWithPersistentConnection
+      val connection1 = ldapManager.connect
+      val connection2 = ldapManager.connect
+      connection1.isSuccess must beTrue
+      connection2.isSuccess must beTrue
+      connection1.get.getConnectionID must beEqualTo(connection2.get.getConnectionID)
+      var connectionId1: Long = 0
+      var connectionId2: Long = 1
+      ldapManager.withConnection(f => {
+        f.isConnected must beTrue
+        connectionId1 = f.getConnectionID
+        LdapResult(0, "Fake")
+      })
+      ldapManager.withConnection(f => {
+        f.isConnected must beTrue
+        connectionId2 = f.getConnectionID
+        LdapResult(0, "Fake")
+      })
+      ldapManager.closeConnection
+      connectionId1 must equalTo(connectionId2)
+
+    }
+```
+
+
 Also, every operation return a LdapResult if is atomic, or SearchResult if has some results, which makes map operations better.
 
 Every object is a `LdapEntry`, which add some godies on the valila LdapEntry of UnboundID. Check `LdapEntrySpec`
@@ -105,3 +133,8 @@ You could do things like:
 ```
 
 There is more, check the specs. Thanks :-)
+
+If you are wondering, the app using this library syncs ~= 60.000 accounts every 2 days in the most dumb way: Batch.
+As a result milions of operations have been done to Active Directory to date, taking 6-8 hours per sync, the app is very successfull on business, so it just works well. The problem offcouse is the constrains that made me do it in this dumb way.
+
+An big improviment started but not completed, is to sync AD and do diff in SQL database, then apply only the operations that need in batch. This has been done for sync when remmoving or blocking accounts, but not in the main batch operations. As a result an operation which would take 6 hours now take less than a minute most of times.
